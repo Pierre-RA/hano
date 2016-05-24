@@ -2,6 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
+var database = require('../utils/database.js');
 
 /* GET dictionary home page */
 router.get('/', function(req, res, next) {
@@ -44,7 +45,13 @@ router.post('/', function(req, res, next) {
 
 /* PUT dictionary entry */
 router.get('/:entry', function(req, res, next) {
-  res.send('something');
+  database.user.findOne(req.body.entry, function(err, result) {
+    if (result) {
+      res.render('entry', {
+        results: result,
+      });
+    }
+  });
 });
 
 /* DELETE dictionary entry */
