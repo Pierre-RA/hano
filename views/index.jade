@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  header
+    h1 #{i18n.hano}
+    div.box
+      input(type='text' placeholder='Input something')
+      ul
+        li
+          a(href='#') #{i18n.history}
+        li
+          a(href='#') #{i18n.land}
+        li
+          a(href='#') #{i18n.people}
+        li
+          a(href='#') #{i18n.lang}
