@@ -6,36 +6,44 @@ var connection = mysql.createConnection(process.env.JAWSDB_URL);
 
 module.exports = {
   clean: function(callback) {
-    var query = 'DROP TABLE IF EXISTS users';
+    var query = 'DROP TABLE IF EXISTS users, entries, dictionary';
     connection.query(query, callback);
   },
 
   init: function(callback) {
-    var query = 'CREATE TABLE IF NOT EXISTS users (' +
-      'id char(36) NOT NULL, ' +
-      // 'status char(36), ' +
-      'username TEXT, ' +
-      'email TEXT, ' +
-      'password TEXT ' +
-      'PRIMARY KEY (id)' +
-      '); ' +
-      'CREATE TABLE IF NOT EXISTS entries (' +
-      'id char(36) NOT NULL, ' +
-      'author char(36) NOT NULL, ' +
-      'lang char(36) NOT NULL, ' +
-      'val TEXT NOT NULL' +
-      'type TEXT NOT NULL' +
-      'api TEXT NOT NULL' +
-      'definitions TEXT, ' +
-      'PRIMARY KEY (id)' +
-      '); ' +
-      'CREATE TABLE IF NOT EXISTS dictionary (' +
-      'id char(36) NOT NULL, ' +
-      'author char(36), ' +
-      'content TEXT, ' +
-      'PRIMARY KEY (id)' +
-      '); ';
-    connection.query(query, callback);
+    var query1 = 'CREATE TABLE IF NOT EXISTS users (' +
+      module.exports.user.id + ' char(36) NOT NULL, ' +
+      module.exports.user.username + ' TEXT, ' +
+      module.exports.user.email + '  TEXT, ' +
+      module.exports.user.password + ' TEXT, ' +
+      'PRIMARY KEY (' + module.exports.user.id + ')' +
+      ')';
+    var query2 = 'CREATE TABLE IF NOT EXISTS entries (' +
+      module.exports.entries.id + ' char(36) NOT NULL, ' +
+      module.exports.entries.author + ' char(36) NOT NULL, ' +
+      module.exports.entries.lang + ' char(36) NOT NULL, ' +
+      module.exports.entries.val + ' TEXT NOT NULL, ' +
+      module.exports.entries.type + ' TEXT NOT NULL, ' +
+      module.exports.entries.ipa + ' TEXT NOT NULL, ' +
+      module.exports.entries.definitions + ' TEXT, ' +
+      'PRIMARY KEY (' + module.exports.entries.id + ')' +
+      ')';
+    var query3 = 'CREATE TABLE IF NOT EXISTS dictionary (' +
+      module.exports.dictionary.id + ' char(36) NOT NULL, ' +
+      module.exports.dictionary.author + ' char(36), ' +
+      module.exports.dictionary.content + ' TEXT, ' +
+      'PRIMARY KEY (' + module.exports.dictionary.id + ')' +
+      ')';
+    connection.query(query1, function(err) {
+      if (err) { return callback(err); }
+      connection.query(query2, function(err) {
+        if (err) { return callback(err); }
+        connection.query(query3, function(err) {
+          if (err) { return callback(err); }
+          callback();
+        });
+      });
+    });
   },
 
   uuid: function(callback) {
@@ -62,10 +70,18 @@ module.exports = {
     });
   },
 
-  search: function(table, key, val, callback) {
+  find: function(table, key, val, callback) {
     var query = squel.select()
       .from(table)
       .where(key + ' = \'' + val + '\'')
+      .toString();
+    connection.query(query, callback);
+  },
+
+  search: function(table, key, val, callback) {
+    var query = squel.select()
+      .from(table)
+      .where(key + ' LIKE \'%' + val + '%\'')
       .toString();
     connection.query(query, callback);
   },
@@ -98,13 +114,25 @@ module.exports = {
     connection.query(query, callback);
   },
 
+  /* USER */
   user: {
+    columns: {
+      id: 'id',
+      username: 'username',
+      email: 'email',
+    },
+
     create: function(user, callback) {
-      module.exports.create('users', user, callback);
+      var cleaned = module.exports.strip('user', user);
+      module.exports.create('users', cleaned, callback);
     },
 
     findOne: function(id, callback) {
       module.exports.findOne('users', id, callback);
+    },
+
+    find: function(key, val, callback) {
+      module.exports.find('users', key, val, callback);
     },
 
     search: function(key, val, callback) {
@@ -112,7 +140,8 @@ module.exports = {
     },
 
     update: function(id, user, callback) {
-      module.exports.update('users', user, callback);
+      var cleaned = module.exports.strip('user', user);
+      module.exports.update('users', cleaned, callback);
     },
 
     delete: function(id, callback) {
@@ -125,8 +154,22 @@ module.exports = {
   },
 
   dictionary: {
+    columns: {
+      id: 'id',
+      author: 'author',
+      lang: 'lang',
+      val: 'val',
+      type: 'type',
+      ipa: 'ipa',
+      definitions: 'definitions',
+    },
+
     create: function(user, callback) {
       module.exports.create('dictionary', user, callback);
+    },
+
+    find: function(key, val, callback) {
+      module.exports.find('dictionary', key, val, callback);
     },
 
     findOne: function(id, callback) {
@@ -151,8 +194,18 @@ module.exports = {
   },
 
   entries: {
+    columns: {
+      id: 'id',
+      author: 'author',
+      content: 'content',
+    },
+
     create: function(user, callback) {
       module.exports.create('entries', user, callback);
+    },
+
+    find: function(key, val, callback) {
+      module.exports.find('entries', key, val, callback);
     },
 
     findOne: function(id, callback) {
@@ -174,5 +227,17 @@ module.exports = {
     count: function(callback) {
       module.exports.count('entries', callback);
     },
+  },
+
+  strip: function(type, array) {
+    var res = {};
+    var cols = Object.keys(module.exports[type].columns);
+
+    for (var i = 0; i < cols.length; i++) {
+      if (array[cols[i]]) {
+        res[cols[i]] = array[cols[i]];
+      }
+    }
+    return res;
   },
 };

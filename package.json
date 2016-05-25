@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "cs": "jscs app.js routes/*.js test/unit/*.js test/server/*.js",
+    "lint": "jshint app.js routes/*.js test/unit/*.js test/server/*.js",
+    "init": "node ./bin/prepare.js",
+    "start": "node ./bin/www",
+    "test": "export NODE_ENV=test && npm run lint && npm run cs && istanbul cover _mocha test/unit/ test/server/ -- -R spec"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -16,5 +20,13 @@
     "passport": "^0.3.2",
     "serve-favicon": "~2.3.0",
     "squel": "^5.2.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "istanbul": "^0.4.3",
+    "jscs": "^3.0.3",
+    "jshint": "^2.9.2",
+    "mocha": "^2.5.3"
   }
 }
