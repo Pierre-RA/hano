@@ -6,48 +6,68 @@ var connection = mysql.createConnection(process.env.JAWSDB_URL);
 
 module.exports = {
   clean: function(callback) {
-    var query = 'DROP TABLE IF EXISTS users, entries, dictionary';
+    var query = 'DROP TABLE IF EXISTS users, entries, articles, definitions';
     connection.query(query, callback);
   },
 
   init: function(callback) {
     var query1 = 'CREATE TABLE IF NOT EXISTS users (' +
-      module.exports.user.id + ' char(36) NOT NULL, ' +
-      module.exports.user.username + ' TEXT, ' +
-      module.exports.user.email + '  TEXT, ' +
-      module.exports.user.password + ' TEXT, ' +
-      'PRIMARY KEY (' + module.exports.user.id + ')' +
+      module.exports.users.columns.id + ' char(36) NOT NULL, ' +
+      module.exports.users.columns.username + ' TEXT, ' +
+      module.exports.users.columns.email + '  TEXT, ' +
+      module.exports.users.columns.password + ' TEXT, ' +
+      'PRIMARY KEY (' + module.exports.users.columns.id + ')' +
       ')';
     var query2 = 'CREATE TABLE IF NOT EXISTS entries (' +
-      module.exports.entries.id + ' char(36) NOT NULL, ' +
-      module.exports.entries.author + ' char(36) NOT NULL, ' +
-      module.exports.entries.lang + ' char(36) NOT NULL, ' +
-      module.exports.entries.val + ' TEXT NOT NULL, ' +
-      module.exports.entries.type + ' TEXT NOT NULL, ' +
-      module.exports.entries.ipa + ' TEXT NOT NULL, ' +
-      module.exports.entries.definitions + ' TEXT, ' +
-      'PRIMARY KEY (' + module.exports.entries.id + ')' +
+      module.exports.entries.columns.id + ' char(36) NOT NULL, ' +
+      module.exports.entries.columns.author + ' char(36) NOT NULL, ' +
+      module.exports.entries.columns.lang + ' char(36) NOT NULL, ' +
+      module.exports.entries.columns.val + ' TEXT NOT NULL, ' +
+      module.exports.entries.columns.type + ' TEXT NOT NULL, ' +
+      module.exports.entries.columns.ipa + ' TEXT NOT NULL, ' +
+      module.exports.entries.columns.definitions + ' TEXT, ' +
+      'PRIMARY KEY (' + module.exports.entries.columns.id + ')' +
       ')';
-    var query3 = 'CREATE TABLE IF NOT EXISTS dictionary (' +
-      module.exports.dictionary.id + ' char(36) NOT NULL, ' +
-      module.exports.dictionary.author + ' char(36), ' +
-      module.exports.dictionary.content + ' TEXT, ' +
-      'PRIMARY KEY (' + module.exports.dictionary.id + ')' +
+    var query3 = 'CREATE TABLE IF NOT EXISTS articles (' +
+      module.exports.articles.columns.id + ' char(36) NOT NULL, ' +
+      module.exports.articles.columns.author + ' char(36), ' +
+      module.exports.articles.columns.url + ' varchar(150), ' +
+      module.exports.articles.columns.title + ' TEXT NOT NULL, ' +
+      module.exports.articles.columns.content + ' TEXT, ' +
+      'UNIQUE KEY (' + module.exports.articles.columns.url + '), ' +
+      'PRIMARY KEY (' + module.exports.articles.columns.id + ')' +
       ')';
+    var query4 = 'CREATE TABLE IF NOT EXISTS definitions (' +
+      module.exports.definitions.columns.id + ' char(36) NOT NULL, ' +
+      module.exports.definitions.columns.entry + ' char(36) NOT NULL, ' +
+      module.exports.definitions.columns.author + ' char(36) NOT NULL, ' +
+      module.exports.definitions.columns.position + ' INT(2) NOT NULL, ' +
+      module.exports.definitions.columns.def + ' TEXT, ' +
+      module.exports.definitions.columns.note + ' TEXT, ' +
+      'PRIMARY KEY (' + module.exports.definitions.columns.id + ')' +
+      ')';
+    // VERBOSE
+    // console.log(query1);
+    // console.log(query2);
+    // console.log(query3);
+    // console.log(query4);
     connection.query(query1, function(err) {
       if (err) { return callback(err); }
       connection.query(query2, function(err) {
         if (err) { return callback(err); }
         connection.query(query3, function(err) {
           if (err) { return callback(err); }
-          callback();
+          connection.query(query4, function(err) {
+            if (err) { return callback(err); }
+            callback();
+          });
         });
       });
     });
   },
 
   uuid: function(callback) {
-    var query = 'SELECT replace(uuid(),\'-\',\'\') AS uuid';
+    var query = 'SELECT uuid() AS uuid';
     connection.query(query, callback);
   },
 
@@ -59,14 +79,19 @@ module.exports = {
     connection.query(query, callback);
   },
 
-  findOne: function(table, id, callback) {
+  findOne: function(table, key, val, callback) {
     var query = squel.select()
       .from(table)
-      .where('id = \'' + id + '\'')
+      .where(key + ' = \'' + val + '\'')
       .limit('1')
       .toString();
     connection.query(query, function(err, rows, fields) {
-      callback(err, rows[0]);
+      if (rows.length === 1) {
+        callback(err, rows[0]);
+      } else {
+        err = err || new Error('Nothing has been found.');
+        callback(err);
+      }
     });
   },
 
@@ -115,7 +140,7 @@ module.exports = {
   },
 
   /* USER */
-  user: {
+  users: {
     columns: {
       id: 'id',
       username: 'username',
@@ -139,7 +164,7 @@ module.exports = {
       module.exports.search('users', key, val, callback);
     },
 
-    update: function(id, user, callback) {
+    update: function(user, callback) {
       var cleaned = module.exports.strip('user', user);
       module.exports.update('users', cleaned, callback);
     },
@@ -153,7 +178,7 @@ module.exports = {
     },
   },
 
-  dictionary: {
+  entries: {
     columns: {
       id: 'id',
       author: 'author',
@@ -164,44 +189,8 @@ module.exports = {
       definitions: 'definitions',
     },
 
-    create: function(user, callback) {
-      module.exports.create('dictionary', user, callback);
-    },
-
-    find: function(key, val, callback) {
-      module.exports.find('dictionary', key, val, callback);
-    },
-
-    findOne: function(id, callback) {
-      module.exports.findOne('dictionary', id, callback);
-    },
-
-    search: function(key, val, callback) {
-      module.exports.search('dictionary', key, val, callback);
-    },
-
-    update: function(id, user, callback) {
-      module.exports.update('dictionary', user, callback);
-    },
-
-    delete: function(id, callback) {
-      module.exports.delete('dictionary', id, callback);
-    },
-
-    count: function(callback) {
-      module.exports.count('dictionary', callback);
-    },
-  },
-
-  entries: {
-    columns: {
-      id: 'id',
-      author: 'author',
-      content: 'content',
-    },
-
-    create: function(user, callback) {
-      module.exports.create('entries', user, callback);
+    create: function(entry, callback) {
+      module.exports.create('entries', entry, callback);
     },
 
     find: function(key, val, callback) {
@@ -216,8 +205,8 @@ module.exports = {
       module.exports.search('entries', key, val, callback);
     },
 
-    update: function(id, user, callback) {
-      module.exports.update('entries', user, callback);
+    update: function(entry, callback) {
+      module.exports.update('entries', entry, callback);
     },
 
     delete: function(id, callback) {
@@ -226,6 +215,83 @@ module.exports = {
 
     count: function(callback) {
       module.exports.count('entries', callback);
+    },
+  },
+
+  articles: {
+    columns: {
+      id: 'id',
+      author: 'author',
+      url: 'url',
+      title: 'title',
+      content: 'content',
+    },
+
+    create: function(article, callback) {
+      module.exports.create('articles', article, callback);
+    },
+
+    find: function(key, val, callback) {
+      module.exports.find('articles', key, val, callback);
+    },
+
+    findOne: function(url, callback) {
+      module.exports.findOne('articles', 'url', url, callback);
+    },
+
+    search: function(key, val, callback) {
+      module.exports.search('articles', key, val, callback);
+    },
+
+    update: function(article, callback) {
+      module.exports.update('articles', article, callback);
+    },
+
+    delete: function(id, callback) {
+      module.exports.delete('articles', id, callback);
+    },
+
+    count: function(callback) {
+      module.exports.count('articles', callback);
+    },
+  },
+
+  definitions: {
+    columns: {
+      id: 'id',
+      entry: 'entry',
+      author: 'author',
+      position: 'position',
+      def: 'def',
+      note: 'note',
+    },
+
+    create: function(definition, callback) {
+      module.exports.create('definitions', definition, callback);
+    },
+
+    find: function(key, val, callback) {
+      module.exports.find('definitions', key, val, callback);
+    },
+
+    findOne: function(id, callback) {
+      module.exports.findOne('definitions', id, callback);
+    },
+
+    search: function(key, val, callback) {
+      module.exports.search('definitions', key, val, callback);
+    },
+
+    update: function(id, definition, callback) {
+      module.exports.update('definitions', definition, callback);
+    },
+
+    delete: function(id, callback) {
+      module.exports.delete('definitions', id, callback);
+    },
+
+    count: function(callback) {
+      module.exports.count('definitions', callback);
     },
   },
 

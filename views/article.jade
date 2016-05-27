@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= article.title
+  div.article!= converter.makeHtml(article.content)
+  if user
+    div.edition
+      a(href='javascript:edit();', id='edit-form') #{i18n.edit}
+      a(href='#', class="btn btn-danger")
+        span(class="glyphicon glyphicon-trash")
+    include ./form_article.jade
+    script.
+      $('#articleForm').hide();
+      function edit() {
+        $('#edit-form').remove();
+        $('.article').remove();
+        $('#articleForm').show();
+      }

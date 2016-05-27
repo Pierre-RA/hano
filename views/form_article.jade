@@ -1,0 +1,31 @@
+.form-group
+  form(id="articleForm", onsubmit="submit(this, '/articles/#{article.id}', '#{method}'); return false;")
+    .form-group
+      label(for="title") #{i18n.title}
+      input(class="form-control", type="text", id="title", value="#{article.title}")
+    .form-group
+      label(for"articleContent") #{i18n.content}
+      textarea(class="form-control", rows="20", id="articleContent")!= article.content
+      button(type="submit", class="btn btn-success")
+        span(class="glyphicon glyphicon-ok")
+      button(type="button", class="btn btn-danger")
+        span(class="glyphicon glyphicon-remove")
+script(type='text/javascript').
+  $(document).ready(function() {
+    $('form').submit(function(e) {
+      e.preventDefault();
+      var data = {
+        'content': $('#articleContent').val(),
+        'title': $('#title').val(),
+      };
+      $.ajax({
+        method: '#{method}',
+        url: '/articles/#{article.id}',
+        data: data,
+        dataType: 'json',
+        encode: true,
+      }).done(function(res) {
+        alert(res);
+      });
+    });
+  });

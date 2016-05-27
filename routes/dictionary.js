@@ -14,10 +14,12 @@ router.get('/', function(req, res, next) {
         type: 'nom',
         api: 'valaː',
         val: 'valár',
-        definitions: [
-          'totalité',
-          'totalitaire',
-        ],
+        definitions: [{
+          def: 'totalité',
+          note: 'vieille notion',
+        }, {
+          def: 'totalitaire',
+        },],
       },
       {
         lang: 'wu',
@@ -40,7 +42,7 @@ router.get('/search', function(req, res, next) {
 
 /* POST dictionary add an entry */
 router.post('/', function(req, res, next) {
-  res.send('something.');
+  res.send('something');
 });
 
 /* PUT dictionary entry */

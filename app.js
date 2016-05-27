@@ -11,7 +11,7 @@ var passport = require('passport');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var dictionary = require('./routes/dictionary');
-var blog = require('./routes/blog');
+var articles = require('./routes/articles');
 
 var app = express();
 
@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/dictionary', dictionary);
-app.use('/blog', blog);
+app.use('/articles', articles);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

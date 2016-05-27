@@ -3,27 +3,14 @@ extends layout
 block content
   each res, index in results
     if index === 0
-      if res.lang === 'wu'
-        h1 #{res.val} -WU
-      else if res.lang === 'na'
-        h1 #{res.val} -NA
-      else if res.lang === 'ch'
-        h1 #{res.val} -WU
-      else if res.lang === 'ja'
-        h1 #{res.val} -JA
+      h1(class='#{res.lang}') #{res.val}
     else
-      if res.lang === 'wu'
-        h2 #{res.val} -WU
-      else if res.lang === 'na'
-        h2 #{res.val} -NA
-      else if res.lang === 'ch'
-        h2 #{res.val} -WU
-      else if res.lang === 'ja'
-        h2 #{res.val} -JA
+      h2(class='#{res.lang}') #{res.val}
     p.subtitle #{res.trans} - #{res.type} - #{res.api}
     ol
       each def, i in res.definitions
-        li= def
+        li= def.def
+          i= def.note
     if res.declension
       .declension.
         res.declension

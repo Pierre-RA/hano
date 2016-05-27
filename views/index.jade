@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  header
+  header.container-fluid
     h1 #{i18n.hano}
     div.box
       input(type='text' placeholder='Input something')
@@ -14,3 +14,6 @@ block content
           a(href='#') #{i18n.people}
         li
           a(href='#') #{i18n.lang}
+    ul
+      li
+        a(href='/articles/new') new article
