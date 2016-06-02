@@ -16,7 +16,10 @@ var articles = require('./routes/articles');
 var app = express();
 
 // View engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', [
+  path.join(__dirname, 'views'),
+  path.join(__dirname, 'views/articles'),
+]);
 app.set('view engine', 'jade');
 
 // Uncomment after placing your favicon in /public
@@ -28,9 +31,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
-app.use('/dictionary', dictionary);
-app.use('/articles', articles);
+app.use('/api/users', users);
+app.use('/api/dictionary', dictionary);
+app.use('/api/articles', articles);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

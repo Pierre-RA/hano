@@ -1,7 +1,8 @@
 'use strict';
 
 module.exports = {
-  edit: 'Edit',
-  title: 'Title',
-  content: 'Content',
+  edit: 'edit',
+  title: 'title',
+  content: 'content',
+  new: 'new',
 };

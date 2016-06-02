@@ -30,6 +30,7 @@ module.exports = {
       ')';
     var query3 = 'CREATE TABLE IF NOT EXISTS articles (' +
       module.exports.articles.columns.id + ' char(36) NOT NULL, ' +
+      module.exports.articles.columns.timestamp + ' long NOT NULL, ' +
       module.exports.articles.columns.author + ' char(36), ' +
       module.exports.articles.columns.url + ' varchar(150), ' +
       module.exports.articles.columns.title + ' TEXT NOT NULL, ' +
@@ -46,11 +47,23 @@ module.exports = {
       module.exports.definitions.columns.note + ' TEXT, ' +
       'PRIMARY KEY (' + module.exports.definitions.columns.id + ')' +
       ')';
+    var query5 = 'CREATE TABLE IF NOT EXISTS categories (' +
+      module.exports.categories.columns.id + ' char(36) NOT NULL, ' +
+      module.exports.categories.columns.title + ' varchar(150) NOT NULL, ' +
+      ')';
+    var query6 = 'CREATE TABLE IF NOT EXISTS categories_articles (' +
+      module.exports.categoriesArticles.columns.articleId +
+        ' char(36) NOT NULL, ' +
+      module.exports.categoriesArticles.columns.categoryId +
+        ' char(36) NOT NULL, ' +
+      ')';
     // VERBOSE
     // console.log(query1);
     // console.log(query2);
     // console.log(query3);
     // console.log(query4);
+    // console.log(query5);
+    // console.log(query6);
     connection.query(query1, function(err) {
       if (err) { return callback(err); }
       connection.query(query2, function(err) {
@@ -59,7 +72,13 @@ module.exports = {
           if (err) { return callback(err); }
           connection.query(query4, function(err) {
             if (err) { return callback(err); }
-            callback();
+            connection.query(query5, function(err) {
+              if (err) { return callback(err); }
+              connection.query(query6, function(err) {
+                if (err) { return callback(err); }
+                callback();
+              });
+            });
           });
         });
       });
@@ -70,6 +89,15 @@ module.exports = {
     var query = 'SELECT uuid() AS uuid';
     connection.query(query, callback);
   },
+
+  tables: [
+    'users',
+    'articles',
+    'entries',
+    'definitions',
+    'categories',
+    'categories_articles',
+  ],
 
   create: function(table, object, callback) {
     var query = squel.insert()
@@ -123,10 +151,10 @@ module.exports = {
     connection.query(query, callback);
   },
 
-  delete: function(table, id, callback) {
+  delete: function(table, key, value, callback) {
     var query = squel.delete()
       .from(table)
-      .where('id = ?', id)
+      .where(key + ' = ?', value)
       .toString();
     connection.query(query, callback);
   },
@@ -170,7 +198,7 @@ module.exports = {
     },
 
     delete: function(id, callback) {
-      module.exports.delete('users', id, callback);
+      module.exports.delete('users', 'id', id, callback);
     },
 
     count: function(callback) {
@@ -210,7 +238,7 @@ module.exports = {
     },
 
     delete: function(id, callback) {
-      module.exports.delete('entries', id, callback);
+      module.exports.delete('entries', 'id', id, callback);
     },
 
     count: function(callback) {
@@ -222,6 +250,7 @@ module.exports = {
     columns: {
       id: 'id',
       author: 'author',
+      timestamp: 'timestamp',
       url: 'url',
       title: 'title',
       content: 'content',
@@ -239,6 +268,23 @@ module.exports = {
       module.exports.findOne('articles', 'url', url, callback);
     },
 
+    list: function(array, callback) {
+      array.order = array.order || 'timestamp';
+      array.direction = array.direction || false;
+      array.offset = array.offset || 0;
+      array.limit = array.limit || 20;
+      array.where = array.where || '1';
+      // Comment
+      var query = squel.select()
+        .from('articles')
+        .where(array.where)
+        .order(array.order, array.direction)
+        .limit(array.limit)
+        .offset(array.offset)
+        .toString();
+      connection.query(query, callback);
+    },
+
     search: function(key, val, callback) {
       module.exports.search('articles', key, val, callback);
     },
@@ -248,7 +294,7 @@ module.exports = {
     },
 
     delete: function(id, callback) {
-      module.exports.delete('articles', id, callback);
+      module.exports.delete('articles', 'id', id, callback);
     },
 
     count: function(callback) {
@@ -287,11 +333,86 @@ module.exports = {
     },
 
     delete: function(id, callback) {
-      module.exports.delete('definitions', id, callback);
+      module.exports.delete('definitions', 'id', id, callback);
     },
 
     count: function(callback) {
       module.exports.count('definitions', callback);
+    },
+  },
+
+  categories: {
+    columns: {
+      id: 'id',
+      title: 'title',
+    },
+
+    create: function(article, callback) {
+      module.exports.create('categories', article, callback);
+    },
+
+    find: function(key, val, callback) {
+      module.exports.find('categories', key, val, callback);
+    },
+
+    findOne: function(url, callback) {
+      module.exports.findOne('categories', 'url', url, callback);
+    },
+
+    list: function(array, callback) {
+      array.order = array.order || 'timestamp';
+      array.direction = array.direction || false;
+      array.offset = array.offset || 0;
+      array.limit = array.limit || 20;
+      array.where = array.where || '1';
+      // Comment
+      var query = squel.select()
+        .from('categories')
+        .where(array.where)
+        .order(array.order, array.direction)
+        .limit(array.limit)
+        .offset(array.offset)
+        .toString();
+      connection.query(query, callback);
+    },
+
+    search: function(key, val, callback) {
+      module.exports.search('categories', key, val, callback);
+    },
+
+    update: function(article, callback) {
+      module.exports.update('categories', article, callback);
+    },
+
+    delete: function(id, callback) {
+      module.exports.delete(
+        'categories_articles',
+        module.exports.categoriesArticles.categoryId,
+        id,
+        function(err) {
+          if (err) {return callback(err);}
+          module.exports.delete('categories', 'id', id, callback);
+        }
+      );
+    },
+
+    count: function(callback) {
+      module.exports.count('categories', callback);
+    },
+  },
+
+  categoriesArticles: {
+    columns: {
+      categoryId: 'categoryId',
+      articleId: 'articleId',
+    },
+
+    create: function(item, callback) {
+      module.exports.create('categoriesArticles', item, callback);
+    },
+
+    delete: function(item, callback) {
+      module.exports.delete('categoriesArticles', item, callback);
     },
   },
 

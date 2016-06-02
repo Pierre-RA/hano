@@ -14,7 +14,9 @@
   "expr":true,
   "globals": {
     "describe": true,
-    "it": true
+    "it": true,
+    "angular": true,
+    "ui": true
   },
   "devel": {
     "console" : false

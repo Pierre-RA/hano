@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+  div(ng-controller='ArticleController', url='#{article.url}')
+    h1= article.title
+    div.article!= converter.makeHtml(article.content)
+    div.categories article.categories
+    if user
+      div.edition
+        a(href="#", class="btn btn-info")
+          span(class="glyphicon glyphicon-pencil")
+        a(href='#', class="btn btn-danger")
+          span(class="glyphicon glyphicon-trash")
+      div(ng-controller='ArticleFormController', method='PUT')
+        include ../form/article.jade

@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+  div(ng-controller='ArticleListController')
+    h1 Articles
+    div(ng-repeat="article in articles")
+      h2 {{article.title}}
+      a(ng-href="/articles/{{article.url}}")
+        i.icon-pencil Show
+      a(ng-href="/EditArticle/{{article.url}}")
+        i.icon-pencil Edit
+    div.
+      {{length}}
+    div
+      a(href="/NewArticle") {{i18n.new}} - -

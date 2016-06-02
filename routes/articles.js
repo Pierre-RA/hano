@@ -1,27 +1,29 @@
 'use strict';
 
 var express = require('express');
-var showdown  = require('showdown');
 var slug = require('slug');
 var i18n = require ('../utils/i18n.js');
 var database = require('../utils/database.js');
 var router = express.Router();
-var converter = new showdown.Converter();
 
 /* GET articles home page */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-
-/* GET articles new page */
-router.get('/new', function(req, res, next) {
-  res.render('new_article', {
-    converter: converter,
-    i18n: i18n,
-    method: 'POST',
-    article: {
-      id: '',
-    },
+  var array = {};
+  if (req.params.page) {
+    array.offset = ((req.params.page - 1) * 50);
+    array.limit = 50; // TODO: put it as a config value.
+  }
+  database.articles.list(array, function(err, rows) {
+    if (err) {
+      return res.json({
+        articles: [{
+          title: 'error',
+        }],
+      });
+    }
+    res.json({
+      articles: rows,
+    });
   });
 });
 
@@ -34,7 +36,10 @@ router.get('/search', function(req, res, next) {
 router.post('/', function(req, res, next) {
   database.uuid(function(err, rows) {
     req.body.id = rows[0].uuid;
+    req.body.timestamp = new Date().getTime();
     req.body.url = slug(req.body.title);
+    var categories = req.body.categories;
+    req.body.categories = null;
     database.articles.create(req.body, function(err) {
       if (err) {
         next(err);
@@ -49,6 +54,8 @@ router.post('/', function(req, res, next) {
 router.put('/:id', function(req, res, next) {
   req.body.id = req.params.id;
   req.body.url = slug(req.body.title);
+  var categories = req.body.categories;
+  req.body.categories = null;
   database.articles.update(req.body, function(err) {
     if (err) {
       next(err);
@@ -73,16 +80,8 @@ router.get('/:url', function(req, res, next) {
     if (err) {
       return next(err);
     }
-    res.render('article', {
-      converter: converter,
-      i18n: i18n,
-      method: 'PUT',
-      user: true,
-      article: {
-        id: row.id,
-        title: row.title,
-        content: row.content,
-      },
+    res.json({
+      article: row,
     });
   });
 });
