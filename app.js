@@ -12,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var dictionary = require('./routes/dictionary');
 var articles = require('./routes/articles');
+var categories = require('./routes/categories');
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use('/', routes);
 app.use('/api/users', users);
 app.use('/api/dictionary', dictionary);
 app.use('/api/articles', articles);
+app.use('/api/categories', categories);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

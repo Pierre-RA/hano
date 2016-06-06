@@ -38,14 +38,20 @@ router.post('/', function(req, res, next) {
     req.body.id = rows[0].uuid;
     req.body.timestamp = new Date().getTime();
     req.body.url = slug(req.body.title);
-    var categories = req.body.categories;
-    req.body.categories = null;
+    var categories = [];
+    for (var i = 0; i < req.body.categories.length; i++) {
+      categories.push({
+        articleId: req.body.id,
+        text: req.body.categories[i].text,
+      });
+    }
+    delete req.body.categories;
     database.articles.create(req.body, function(err) {
-      if (err) {
-        next(err);
-      } else {
-        res.send('sent');
-      }
+      if (err) { return next(err); }
+      database.categories.update(categories, req.body.id, function(err) {
+        if (err) { return next(err); }
+        res.send('success');
+      });
     });
   });
 });
@@ -54,34 +60,39 @@ router.post('/', function(req, res, next) {
 router.put('/:id', function(req, res, next) {
   req.body.id = req.params.id;
   req.body.url = slug(req.body.title);
-  var categories = req.body.categories;
-  req.body.categories = null;
+  var categories = [];
+  for (var i = 0; i < req.body.categories.length; i++) {
+    categories.push({
+      articleId: req.body.id,
+      text: req.body.categories[i].text,
+    });
+  }
+  delete req.body.categories;
   database.articles.update(req.body, function(err) {
-    if (err) {
-      next(err);
-    } else {
-      res.send('sent');
-    }
+    if (err) { return next(err); }
+    database.categories.update(categories, req.body.id, function(err) {
+      if (err) { return next(err); }
+      res.send('success');
+    });
   });
 });
 
 /* DELETE /articles/:id delete an article */
 router.delete('/:id', function(req, res, next) {
   database.articles.delete(req.params.id, function(err) {
-    if (err) {
-      return next(err);
-    }
+    if (err) { return next(err); }
   });
 });
 
 /* GET /articles/:url get an article */
 router.get('/:url', function(req, res, next) {
   database.articles.findOne(req.params.url, function(err, row) {
-    if (err) {
-      return next(err);
-    }
-    res.json({
-      article: row,
+    if (err) { return next(err); }
+    database.categories.find('articleId', row.id, function(err, rows) {
+      row.categories = rows;
+      res.json({
+        article: row,
+      });
     });
   });
 });

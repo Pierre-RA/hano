@@ -6,7 +6,7 @@ var connection = mysql.createConnection(process.env.JAWSDB_URL);
 
 module.exports = {
   clean: function(callback) {
-    var query = 'DROP TABLE IF EXISTS users, entries, articles, definitions';
+    var query = 'DROP TABLE IF EXISTS ' + module.exports.tables.join();
     connection.query(query, callback);
   },
 
@@ -48,14 +48,10 @@ module.exports = {
       'PRIMARY KEY (' + module.exports.definitions.columns.id + ')' +
       ')';
     var query5 = 'CREATE TABLE IF NOT EXISTS categories (' +
-      module.exports.categories.columns.id + ' char(36) NOT NULL, ' +
+      module.exports.categories.columns.articleId + ' char(36) NOT NULL, ' +
       module.exports.categories.columns.title + ' varchar(150) NOT NULL, ' +
-      ')';
-    var query6 = 'CREATE TABLE IF NOT EXISTS categories_articles (' +
-      module.exports.categoriesArticles.columns.articleId +
-        ' char(36) NOT NULL, ' +
-      module.exports.categoriesArticles.columns.categoryId +
-        ' char(36) NOT NULL, ' +
+      'UNIQUE KEY (' + module.exports.categories.columns.title + ', ' +
+      module.exports.categories.columns.articleId + ') ' +
       ')';
     // VERBOSE
     // console.log(query1);
@@ -63,7 +59,6 @@ module.exports = {
     // console.log(query3);
     // console.log(query4);
     // console.log(query5);
-    // console.log(query6);
     connection.query(query1, function(err) {
       if (err) { return callback(err); }
       connection.query(query2, function(err) {
@@ -74,10 +69,7 @@ module.exports = {
             if (err) { return callback(err); }
             connection.query(query5, function(err) {
               if (err) { return callback(err); }
-              connection.query(query6, function(err) {
-                if (err) { return callback(err); }
-                callback();
-              });
+              callback();
             });
           });
         });
@@ -96,15 +88,14 @@ module.exports = {
     'entries',
     'definitions',
     'categories',
-    'categories_articles',
   ],
 
   create: function(table, object, callback) {
     var query = squel.insert()
       .into(table)
       .setFields(object)
-      .toString();
-    connection.query(query, callback);
+      .toParam();
+    connection.query(query.text, query.values, callback);
   },
 
   findOne: function(table, key, val, callback) {
@@ -343,8 +334,8 @@ module.exports = {
 
   categories: {
     columns: {
-      id: 'id',
-      title: 'title',
+      articleId: 'articleId',
+      title: 'text',
     },
 
     create: function(article, callback) {
@@ -376,12 +367,35 @@ module.exports = {
       connection.query(query, callback);
     },
 
-    search: function(key, val, callback) {
-      module.exports.search('categories', key, val, callback);
+    search: function(query, callback) {
+      module.exports.search(
+        'categories',
+        module.exports.categories.columns.title,
+        query,
+        callback);
     },
 
-    update: function(article, callback) {
-      module.exports.update('categories', article, callback);
+    update: function(categories, id, callback) {
+      var del = squel.delete()
+        .from('categories')
+        .where('articleId = ?', id)
+        .toParam();
+      connection.query(del.text, del.values, function(err) {
+        var query = squel.insert()
+          .into('categories')
+          .setFieldsRows(categories)
+          .toParam();
+        connection.query(query.text, query.values, function(err) {
+          if (err) { return callback(err); }
+          callback();
+        });
+      });
+      // TODO: to remove.
+      // query.text += ' ON DUPLICATE KEY UPDATE ' +
+      //   module.exports.categories.columns.title + ' = VALUES(' +
+      //   module.exports.categories.columns.title + '), ' +
+      //   module.exports.categories.columns.articleId + ' = VALUES(' +
+      //   module.exports.categories.columns.articleId + ')';
     },
 
     delete: function(id, callback) {
@@ -398,21 +412,6 @@ module.exports = {
 
     count: function(callback) {
       module.exports.count('categories', callback);
-    },
-  },
-
-  categoriesArticles: {
-    columns: {
-      categoryId: 'categoryId',
-      articleId: 'articleId',
-    },
-
-    create: function(item, callback) {
-      module.exports.create('categoriesArticles', item, callback);
-    },
-
-    delete: function(item, callback) {
-      module.exports.delete('categoriesArticles', item, callback);
     },
   },
 

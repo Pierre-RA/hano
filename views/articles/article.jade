@@ -3,13 +3,15 @@ extends ../layout
 block content
   div(ng-controller='ArticleController', url='#{article.url}')
     h1= article.title
-    div.article!= converter.makeHtml(article.content)
-    div.categories article.categories
+    div.article!= translator.parse(converter.makeHtml(article.content))
+    div.categories
+      each cat in article.categories
+        a(href="/categories/#{cat.text}") #{cat.text} 
     if user
       div.edition
-        a(href="#", class="btn btn-info")
+        button(class="btn btn-info", ng-click="form = !form")
           span(class="glyphicon glyphicon-pencil")
         a(href='#', class="btn btn-danger")
           span(class="glyphicon glyphicon-trash")
-      div(ng-controller='ArticleFormController', method='PUT')
+      div(ng-controller='ArticleFormController', method='PUT', ng-show="form")
         include ../form/article.jade

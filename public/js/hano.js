@@ -9,7 +9,6 @@ angular.module('hano', ['ui.bootstrap', 'ngTagsInput'])
   })
   .controller('ArticleFormController', function($scope, $attrs, $http) {
     $scope.update = function() {
-      console.log($attrs.method);
       var append = $scope.article.url ? '/' + $scope.article.id : '';
       $http({
         method: $attrs.method,
@@ -32,4 +31,26 @@ angular.module('hano', ['ui.bootstrap', 'ngTagsInput'])
     $http.get('/api/articles/' + $attrs.url).success(function(data) {
       $scope.article = data.article;
     });
+    $scope.form = false;
+  })
+  .controller('EntryController', function($scope, $attrs, $http) {
+    $scope.showEntry = !$attrs.form;
+    $scope.showEdition = $attrs.form;
+    $scope.entries = {};
+    if ($attrs.new === 'false') {
+      $http.get('/api/dictionary/' + $attrs.url)
+        .then(function(data) {
+          $scope.entries = data.data;
+          console.log($scope.entries);
+        }, function(err) {
+          console.log(err);
+        });
+    }
+    $scope.update = function(id) {
+      for (var i = 0; i < $scope.entries.length; i++) {
+        if ($scope.entries[i].id === id) {
+          console.log($scope.entries[i]);
+        }
+      }
+    };
   });

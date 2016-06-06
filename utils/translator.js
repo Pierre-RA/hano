@@ -10,10 +10,25 @@ module.exports = {
   },
 
   parseWutopian: function(text) {
-    return '<span class="wutopian">' + text + '</span>';
+    return text.replace(/\[wut:([^\]]+)\]/,
+      '<span class="wutopian">$1</span>');
   },
 
   parseNardanskh: function(text) {
-    return '<span class="nardanskh">' + text + '</span>';
+    return text.replace(/\[nar:([^\]]+)\]/,
+      '<span class="nardanskh">$1</span>');
+  },
+
+  parseCalendar: function(text) {
+    return text.replace(/\[ic:([^\]]+)\]/,
+      '<a href="/calendar/$1">IC $1</a>');
+  },
+
+  parse: function(text) {
+    var result = module.exports.parseLinks(text);
+    result = module.exports.parseWutopian(result);
+    result = module.exports.parseNardanskh(result);
+    result = module.exports.parseCalendar(result);
+    return result;
   },
 };

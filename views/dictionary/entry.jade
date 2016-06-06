@@ -1,0 +1,57 @@
+extends ../layout
+
+block content
+  div.container(ng-controller="EntryController", new="#{form}", url="#{url}")
+    h1 #{url}
+    div.entry(ng-show="showEntry", ng-repeat="entry in entries")
+      h2(class='{{entry.lang}}') {{entry.val}}
+      p.subtitle {{entry.trans}} - {{entry.type}} - {{entry.ipa}}
+      ol
+        li(ng-repeat="definition in entry.definitions") {{definition.def}}
+          i(ng-if="definition.note") {{definition.note}}
+      div(ng-if="entry.declension")
+        .declension.
+          {{entry.declension}}
+      div(ng-if="entry.conjugation")
+        .conjugation.
+          {{entry.conjugation}}
+      div(ng-if="entry.transcription")
+        .transcription.
+          {{entry.transcription}}
+      div(ng-if="entry.synonyms")
+        .synonyms.
+          {{entry.synonyms}}
+      div(ng-if="entry.related")
+        .related.
+          {{entry.related}}
+      if user
+        button(class="btn btn-info", ng-click="showEdition = !showEdition")
+          span(class="glyphicon glyphicon-pencil")
+        div.edition(ng-show="showEdition")
+          form(novalidate)
+            .form-group
+              label #{i18n.trans}
+              input(type="text", ng-model="entry.trans", class="form-control")
+              label #{i18n.ipa}
+              input(type="text", ng-model="entry.ipa", class="form-control")
+            .form-group
+              label #{i18n.lang}
+              select(ng-model="entry.lang", class="form-control")
+                option(value="mo") #{i18n.modern}
+                option(value="wu") #{i18n.wutopian}
+                option(value="hw") #{i18n.highWutopian}
+                option(value="na") #{i18n.nardanskh}
+                option(value="ch") #{i18n.cholian}
+                option(value="ja") #{i18n.janubian}
+            .form-group
+              label #{i18n.type}
+              input(type="text", ng-model="entry.type", class="form-control")
+            .form-group(ng-repeat="definition in entry.definitions")
+              label #{i18n.definition}
+              input(type="text", ng-model="definition.def", class="form-control")
+              label #{i18n.note}
+              input(type="text", ng-model="definition.note", class="form-control")
+            button(type="submit", class="btn btn-success", ng-click="update(entry.id)")
+              span(class="glyphicon glyphicon-ok")
+            button(type="button", class="btn btn-danger", ng-click="reset()")
+              span(class="glyphicon glyphicon-remove")

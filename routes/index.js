@@ -5,6 +5,7 @@ var showdown  = require('showdown');
 var router = express.Router();
 var database = require('../utils/database.js');
 var i18n = require ('../utils/i18n.js');
+var translator = require('../utils/translator.js');
 var converter = new showdown.Converter();
 
 /* GET home page. */
@@ -33,6 +34,7 @@ router.get('/users', function(req, res, next) {
 
 /* GET single user */
 
+
 /* GET add a new user */
 
 /**
@@ -41,14 +43,29 @@ router.get('/users', function(req, res, next) {
 
 /* GET list of entries */
 router.get('/dictionary', function(req, res, next) {
-  res.render('entries', {
+  res.render('dictionary/list', {
     i18n: i18n,
   });
 });
 
 /* GET single entry */
+router.get('/dictionary/:url', function(req, res, next) {
+  res.render('dictionary/entry', {
+    i18n: i18n,
+    url: req.params.url,
+    form: 'false',
+    user: 'u',
+  });
+});
 
 /* GET add a new entry */
+router.get('/NewEntry', function(req, res, next) {
+  res.render('dictionary/entry', {
+    i18n: i18n,
+    url: '',
+    form: 'true',
+  });
+});
 
 /**
  * ARTICLES
@@ -63,13 +80,19 @@ router.get('/articles', function(req, res, next) {
 
 /* GET single article */
 router.get('/articles/:url', function(req, res, next) {
-  database.articles.findOne(req.params.url, function(err, rows) {
-    res.render('articles/article', {
-      i18n: i18n,
-      url: req.params.url,
-      article: rows,
-      converter: converter,
-      user: 's',
+  database.articles.findOne(req.params.url, function(err, row) {
+    if (err) { return next(err); }
+    database.categories.find('articleId', row.id, function(err, rows) {
+      if (err) { return next(err); }
+      row.categories = rows;
+      res.render('articles/article', {
+        i18n: i18n,
+        url: req.params.url,
+        article: row,
+        converter: converter,
+        translator: translator,
+        user: 's',
+      });
     });
   });
 });

@@ -1,0 +1,12 @@
+form(novalidate)
+  .form-group
+    label #{i18n.name}
+    input(type="text", ng-model="user.name", class="form-control")
+  .form-group
+    label #{i18n.email}
+    input(type="email", ng-model="user.email", class="form-control")
+  .form-group
+    button(type="submit", class="btn btn-success", ng-click="update()")
+      span(class="glyphicon glyphicon-ok")
+    button(type="button", class="btn btn-danger", ng-click="reset()")
+      span(class="glyphicon glyphicon-remove")

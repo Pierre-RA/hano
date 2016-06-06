@@ -1,11 +1,11 @@
 form(novalidate)
   .form-group
-    label(for="title") #{i18n.title}
+    label #{i18n.title}
     input(type="text", ng-model="article.title", class="form-control")
   .form-group
-    label(for"articleContent") #{i18n.content}
+    label #{i18n.content}
     textarea(ng-model="article.content", class="form-control", rows="20")
-    tags-input(ng-model="article.tags")
+    tags-input(ng-model="article.categories")
       auto-complete(source="loadTags($query)")
     button(type="submit", class="btn btn-success", ng-click="update()")
       span(class="glyphicon glyphicon-ok")

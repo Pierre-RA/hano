@@ -47,13 +47,33 @@ router.post('/', function(req, res, next) {
 
 /* PUT dictionary entry */
 router.get('/:entry', function(req, res, next) {
-  database.user.findOne(req.body.entry, function(err, result) {
-    if (result) {
-      res.render('entry', {
-        results: result,
-      });
-    }
-  });
+  res.json([
+    {
+      id: 'abc-123',
+      lang: 'wu',
+      trans: 'valár',
+      type: 'nom',
+      ipa: 'valaː',
+      val: 'valár',
+      definitions: [{
+        def: 'totalité',
+        note: 'vieille notion',
+      }, {
+        def: 'totalitaire',
+      },],
+    },
+    {
+      id: 'a12-ac2',
+      lang: 'na',
+      trans: 'valár',
+      type: 'verbe',
+      ipa: 'valaː',
+      val: 'valár',
+      definitions: [{
+        def: 'totaliser',
+      }],
+    },
+  ]);
 });
 
 /* DELETE dictionary entry */
