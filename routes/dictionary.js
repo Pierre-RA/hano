@@ -42,10 +42,26 @@ router.get('/search', function(req, res, next) {
 
 /* POST dictionary add an entry */
 router.post('/', function(req, res, next) {
-  res.send('something');
+  database.uuid(function(err, rows) {
+    req.body.id = rows[0].uuid;
+    req.body.timestamp = new Date().getTime();
+    for (var i = 0; i < req.body.definitions.length; i++) {
+      database.definitions.create(req.body.definitions[i]);
+    }
+    database.dictionary.create(req.body, function(err) {
+      if (err) {
+        return res.json({
+          error: err,
+        });
+      }
+      res.json({
+        message: 'entry created.',
+      });
+    });
+  });
 });
 
-/* PUT dictionary entry */
+/* GET dictionary entry */
 router.get('/:entry', function(req, res, next) {
   res.json([
     {
@@ -77,13 +93,44 @@ router.get('/:entry', function(req, res, next) {
 });
 
 /* DELETE dictionary entry */
-router.get('/:entry', function(req, res, next) {
-  res.send('something');
+router.delete('/:id', function(req, res, next) {
+  database.definitions.delete(req.params.id, function(err) {
+    if (err) {
+      return res.json({
+        error: err,
+      });
+    }
+    database.dictionary.delete(req.params.id, function(err) {
+      res.json({
+        message: 'entry deleted.',
+      });
+    });
+  });
 });
 
-/* GET dictionary entry */
-router.get('/:entry', function(req, res, next) {
-  res.send('something');
+/* PUT dictionary entry */
+router.put('/:id', function(req, res, next) {
+  req.body.id = req.params.id;
+  database.definitions.delete(req.params.id, function(err) {
+    if (err) {
+      return res.json({
+        error: err,
+      });
+    }
+    for (var i = 0; i < req.body.definitions.length; i++) {
+      database.definitions.create(req.body.definitions[i]);
+    }
+    database.dictionary.update(req.body, function(err) {
+      if (err) {
+        return res.json({
+          error: err,
+        });
+      }
+      res.json({
+        message: 'entry updated.',
+      });
+    });
+  });
 });
 
 module.exports = router;

@@ -62,8 +62,9 @@ router.get('/dictionary/:url', function(req, res, next) {
 router.get('/NewEntry', function(req, res, next) {
   res.render('dictionary/entry', {
     i18n: i18n,
-    url: '',
+    url: 'New Entry',
     form: 'true',
+    user: 's',
   });
 });
 

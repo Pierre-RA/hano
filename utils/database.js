@@ -41,7 +41,6 @@ module.exports = {
     var query4 = 'CREATE TABLE IF NOT EXISTS definitions (' +
       module.exports.definitions.columns.id + ' char(36) NOT NULL, ' +
       module.exports.definitions.columns.entry + ' char(36) NOT NULL, ' +
-      module.exports.definitions.columns.author + ' char(36) NOT NULL, ' +
       module.exports.definitions.columns.position + ' INT(2) NOT NULL, ' +
       module.exports.definitions.columns.def + ' TEXT, ' +
       module.exports.definitions.columns.note + ' TEXT, ' +
@@ -324,7 +323,11 @@ module.exports = {
     },
 
     delete: function(id, callback) {
-      module.exports.delete('definitions', 'id', id, callback);
+      var query = squel.delete()
+        .from('definitions')
+        .where('entry = ?', id)
+        .toString();
+      connection.query(query, callback);
     },
 
     count: function(callback) {

@@ -36,7 +36,9 @@ angular.module('hano', ['ui.bootstrap', 'ngTagsInput'])
   .controller('EntryController', function($scope, $attrs, $http) {
     $scope.showEntry = !$attrs.form;
     $scope.showEdition = $attrs.form;
-    $scope.entries = {};
+    $scope.entries = {
+      entry: {},
+    };
     if ($attrs.new === 'false') {
       $http.get('/api/dictionary/' + $attrs.url)
         .then(function(data) {
@@ -47,10 +49,32 @@ angular.module('hano', ['ui.bootstrap', 'ngTagsInput'])
         });
     }
     $scope.update = function(id) {
-      for (var i = 0; i < $scope.entries.length; i++) {
-        if ($scope.entries[i].id === id) {
-          console.log($scope.entries[i]);
+      if (id) {
+        var entry;
+        for (var i = 0; i < $scope.entries.length; i++) {
+          if ($scope.entries[i].id === id) {
+            entry = $scope.entries[1];
+          }
         }
+        $http({
+          method: 'put',
+          url: '/api/dictionary',
+          data: entry,
+        }).then(function() {
+          console.log('success');
+        }, function(err) {
+          console.log(err);
+        });
+      } else {
+        $http({
+          method: 'post',
+          url: '/api/dictionary',
+          data: $scope.entries[0],
+        }).then(function() {
+          console.log('success');
+        }, function(err) {
+          console.log(err);
+        });
       }
     };
   });

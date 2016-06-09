@@ -5,7 +5,9 @@ block content
     h1 #{url}
     div.entry(ng-show="showEntry", ng-repeat="entry in entries")
       h2(class='{{entry.lang}}') {{entry.val}}
-      p.subtitle {{entry.trans}} - {{entry.type}} - {{entry.ipa}}
+      p.subtitle {{entry.trans}}
+        span(ng-if="entry.type") {{entry.type}}
+        span(ng-if="entry.ipa") {{entry.ipa}}
       ol
         li(ng-repeat="definition in entry.definitions") {{definition.def}}
           i(ng-if="definition.note") {{definition.note}}
