@@ -7,6 +7,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
+var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -15,6 +16,14 @@ var articles = require('./routes/articles');
 var categories = require('./routes/categories');
 
 var app = express();
+
+mongoose.connect(process.env.MONGODB_URI);
+mongoose.connection.on('error', function() {
+  console.log(
+    'MongoDB Connection Error. Please make sure that MongoDB is running.'
+  );
+  process.exit(1);
+});
 
 // View engine setup
 app.set('views', [
@@ -35,7 +44,6 @@ app.use('/', routes);
 app.use('/api/users', users);
 app.use('/api/dictionary', dictionary);
 app.use('/api/articles', articles);
-app.use('/api/categories', categories);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

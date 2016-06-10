@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+  div(ng-controller='UsersListController')
+    h1 Users
+    div(ng-repeat="user in users")
+      h2 {{user.name}}
+      a(ng-href="/users/{{user.url}}")
+        i.icon-pencil Show
+      a(ng-href="/EditArticle/{{user.url}}")
+        i.icon-pencil Edit

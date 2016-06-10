@@ -33,6 +33,17 @@ angular.module('hano', ['ui.bootstrap', 'ngTagsInput'])
     });
     $scope.form = false;
   })
+  .controller('UserController', function($scope, $attrs, $http) {
+    $http.get('/api/users/' + $attrs.url).success(function(data) {
+      $scope.user = data;
+      console.log($scope.user);
+    });
+  })
+  .controller('UsersListController', function($scope, $attrs, $http) {
+    $http.get('/api/users/').success(function(data) {
+      $scope.users = data.users;
+    });
+  })
   .controller('EntryController', function($scope, $attrs, $http) {
     $scope.showEntry = !$attrs.form;
     $scope.showEdition = $attrs.form;

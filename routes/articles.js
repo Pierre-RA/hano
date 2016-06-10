@@ -3,7 +3,7 @@
 var express = require('express');
 var slug = require('slug');
 var i18n = require ('../utils/i18n.js');
-var database = require('../utils/database.js');
+var database = null;
 var router = express.Router();
 
 /* GET articles home page */

@@ -2,7 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var database = require('../utils/database.js');
+var database = null;
 
 /* GET dictionary home page */
 router.get('/', function(req, res, next) {

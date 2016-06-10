@@ -2,18 +2,18 @@ extends layout
 
 block content
   header.container-fluid
-    h1 #{i18n.hano}
+    h1. #{i18n.hano}
     div.box
       input(type='text' placeholder='Input something')
       ul
         li
-          a(href='#') #{i18n.history}
+          a(href='#'). #{i18n.history}
         li
-          a(href='#') #{i18n.land}
+          a(href='#'). #{i18n.land}
         li
-          a(href='#') #{i18n.people}
+          a(href='#'). #{i18n.people}
         li
-          a(href='#') #{i18n.lang}
+          a(href='#'). #{i18n.lang}
     ul
       li
         a(href='/articles/new') new article

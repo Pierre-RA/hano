@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var database = require('../utils/database.js');
+var database = null;
 var router = express.Router();
 
 /* GET categories */
