@@ -2,113 +2,65 @@
 
 var express = require('express');
 var slug = require('slug');
-var i18n = require ('../utils/i18n.js');
-var database = null;
+var Article = require('../models/article.js');
 var router = express.Router();
 
-/* GET articles home page */
+/* GET arrticle listing. */
 router.get('/', function(req, res, next) {
-  var array = {};
-  if (req.params.page) {
-    array.offset = ((req.params.page - 1) * 50);
-    array.limit = 50; // TODO: put it as a config value.
-  }
-  database.articles.list(array, function(err, rows) {
-    if (err) {
-      return res.json({
-        articles: [{
-          title: 'error',
-        }],
-      });
-    }
-    res.json({
-      articles: rows,
-    });
+  Article.find({}, function(err, articles) {
+    if (err) { return res.status(500).json({ error: err }); }
+    res.json(articles);
   });
 });
 
-/* GET /articles/search */
-router.get('/search', function(req, res, next) {
-  res.send('something');
-});
-
-/* POST /articles add an article */
-router.post('/', function(req, res, next) {
-  database.uuid(function(err, rows) {
-    req.body.id = rows[0].uuid;
-    req.body.timestamp = new Date().getTime();
-    req.body.url = slug(req.body.title);
-    var categories = [];
-    for (var i = 0; i < req.body.categories.length; i++) {
-      categories.push({
-        articleId: req.body.id,
-        text: req.body.categories[i].text,
-      });
-    }
-    delete req.body.categories;
-    database.articles.create(req.body, function(err) {
-      if (err) { return next(err); }
-      database.categories.update(categories, req.body.id, function(err) {
-        if (err) { return next(err); }
-        res.send('success');
-      });
-    });
-  });
-});
-
-/* PUT /articles/:id update an article */
-router.put('/:id', function(req, res, next) {
-  req.body.id = req.params.id;
-  req.body.url = slug(req.body.title);
-  var categories = [];
-  for (var i = 0; i < req.body.categories.length; i++) {
-    categories.push({
-      articleId: req.body.id,
-      text: req.body.categories[i].text,
-    });
-  }
-  delete req.body.categories;
-  database.articles.update(req.body, function(err) {
-    if (err) { return next(err); }
-    database.categories.update(categories, req.body.id, function(err) {
-      if (err) { return next(err); }
-      res.send('success');
-    });
-  });
-});
-
-/* DELETE /articles/:id delete an article */
-router.delete('/:id', function(req, res, next) {
-  database.articles.delete(req.params.id, function(err) {
-    if (err) { return next(err); }
-  });
-});
-
-/* GET /articles/:url get an article */
+/* GET article */
 router.get('/:url', function(req, res, next) {
-  database.articles.findOne(req.params.url, function(err, row) {
-    if (err) { return next(err); }
-    database.categories.find('articleId', row.id, function(err, rows) {
-      row.categories = rows;
-      res.json({
-        article: row,
+  Article.findOne({ url: req.params.url }, function(err, article) {
+    if (!article) {
+      return res.status(404).json({
+        message: 'Article not found.',
       });
+    }
+    res.json(article);
+  });
+});
+
+/* POST entry */
+router.post('/', function(req, res, next) {
+  var article = new Article({
+    url: slug(req.body.title),
+    title: req.body.title,
+    content: req.body.content,
+    categories: req.body.categories,
+    era: req.body.era,
+  });
+  article.save(function(err) {
+    if (err) { return res.status(500).json({ error: err }); }
+    res.json({
+      message: 'article created',
     });
   });
 });
 
-/* GET /articles/exists/:url tells if url already exists */
-router.get('/exists/:url', function(req, res, next) {
-  database.articles.findOne(req.params.url, function(err, row) {
-    if (err) {
-      return res.json({
-        exists: false,
+/* PUT article */
+router.put('/:id', function(req, res, next) {
+  Article.findByIdAndUpdate(req.params.id, req.body,
+    function(err, doc) {
+      if (err) { return res.status(500).json({ error: err }); }
+      res.json({
+        message: 'article updated',
       });
-    }
+    });
+});
+
+/* DELETE article */
+router.delete('/:id', function(req, res, next) {
+  Article.remove({ _id: req.params.id }, function(err) {
     res.json({
-      exists: true,
+      message: 'article #' + req.params.id + ' has been removed.',
     });
   });
 });
+
 
 module.exports = router;

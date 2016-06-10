@@ -1,13 +1,16 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+var schemaOptions = {
+  timestamps: true,
+  toJSON: {
+    virtuals: true
+  },
+};
 
 var dictionarySchema = new mongoose.Schema({
-  created: Date,
-  lastModified: {
-    type: Date,
-    default: Date.now,
-  },
   lang: String,
   val: String,
   type: String,
@@ -20,8 +23,9 @@ var dictionarySchema = new mongoose.Schema({
   declension: String,
   conjugation: String,
   transcription: String,
-  related: [],
-});
+  related: [ String ],
+  author: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+}, schemaOptions);
 
 var Dictionary = mongoose.model('Dictionary', dictionarySchema);
 
