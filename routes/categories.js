@@ -1,19 +1,24 @@
 'use strict';
 
 var express = require('express');
-var database = null;
 var router = express.Router();
 var Article = require('../models/article.js');
 
 /* GET categories */
 router.get('/', function(req, res, next) {
+  var regex = req.query.q ? new RegExp(req.query.q, 'i') : null;
   Article.distinct('categories', {}, function(err, entries) {
-    if (!entries) {
-      return res.status(404).json({
-        message: 'Categories not found.',
-      });
+    var result = [];
+    if (regex) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].match(regex)) {
+          result.push(entries[i]);
+        }
+      }
+    } else {
+      result = entries;
     }
-    res.json(entries);
+    res.json(result);
   });
 });
 

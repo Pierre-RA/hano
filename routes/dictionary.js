@@ -14,7 +14,8 @@ router.get('/', function(req, res, next) {
 
 /* GET entry */
 router.get('/:trans', function(req, res, next) {
-  Dictionary.find({ trans: req.params.trans }, function(err, entries) {
+  Dictionary.find({ transcription: decodeURI(req.params.trans) },
+    function(err, entries) {
     if (!entries) {
       return res.status(404).json({
         message: 'Entries not found.',
@@ -45,7 +46,7 @@ router.post('/', function(req, res, next) {
   });
 });
 
-/* PUT user */
+/* PUT entry */
 router.put('/:id', function(req, res, next) {
   Dictionary.findByIdAndUpdate(req.params.id, req.body,
     function(err, doc) {
@@ -56,7 +57,7 @@ router.put('/:id', function(req, res, next) {
     });
 });
 
-/* DELETE user */
+/* DELETE entry */
 router.delete('/:id', function(req, res, next) {
   Dictionary.remove({ _id: req.params.id }, function(err) {
     res.json({

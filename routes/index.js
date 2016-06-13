@@ -37,7 +37,7 @@ router.get('/categories/', function(req, res, next) {
   });
 });
 
-/* GET catgeory */
+/* GET category */
 router.get('/categories/:url', function(req, res, next) {
   res.render('articles/list', {
     i18n: i18n,
