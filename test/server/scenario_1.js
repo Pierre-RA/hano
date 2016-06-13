@@ -54,4 +54,23 @@ describe('Test server', function() {
         });
     });
   });
+
+  describe('articles', function() {
+
+  });
+
+  describe('categories', function() {
+    it('should get some categories', function(done) {
+      chai.request(app)
+        .get('/api/categories/')
+        .end(function(err, res) {
+          should.not.exist(err);
+          res.should.have.status(200);
+        });
+    });
+  });
+
+  describe('dictionary', function() {
+
+  });
 });

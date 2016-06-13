@@ -8,7 +8,8 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   var query = req.query.query || '';
   database.categories.search(query, function(err, rows) {
-    if (err) { return next(err);}
+    console.log(rows);
+    if (err) { return next(err); }
     res.json(rows);
   });
 });

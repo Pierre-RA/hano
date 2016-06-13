@@ -44,6 +44,7 @@ app.use('/', routes);
 app.use('/api/users', users);
 app.use('/api/dictionary', dictionary);
 app.use('/api/articles', articles);
+app.use('/api/categories', categories);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -68,7 +68,7 @@ router.get('/users/', function(req, res, next) {
   });
 });
 
-/* GET entry */
+/* GET user */
 router.get('/users/:url', function(req, res, next) {
   res.render('users/user', {
     i18n: i18n,
