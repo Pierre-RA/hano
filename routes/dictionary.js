@@ -2,133 +2,65 @@
 
 var express = require('express');
 var router = express.Router();
-var database = null;
+var Dictionary = require('../models/dictionary.js');
 
-/* GET dictionary home page */
+/* GET dictionary listing. */
 router.get('/', function(req, res, next) {
-  res.render('entry', {
-    results: [
-      {
-        lang: 'wu',
-        trans: 'valár',
-        type: 'nom',
-        api: 'valaː',
-        val: 'valár',
-        definitions: [{
-          def: 'totalité',
-          note: 'vieille notion',
-        }, {
-          def: 'totalitaire',
-        },],
-      },
-      {
-        lang: 'wu',
-        trans: 'valár',
-        type: 'verbe',
-        api: 'valaː',
-        val: 'valár',
-        definitions: [
-          'totaliser',
-        ],
-      },
-    ],
+  Dictionary.find({}, function(err, entries) {
+    if (err) { return res.status(500).json({ error: err }); }
+    res.json(entries);
   });
 });
 
-/* GET dictionary search */
-router.get('/search', function(req, res, next) {
-  res.send('something');
+/* GET entry */
+router.get('/:trans', function(req, res, next) {
+  Dictionary.find({ trans: req.params.trans }, function(err, entries) {
+    if (!entries) {
+      return res.status(404).json({
+        message: 'Entries not found.',
+      });
+    }
+    res.json(entries);
+  });
 });
 
-/* POST dictionary add an entry */
+/* POST entry */
 router.post('/', function(req, res, next) {
-  database.uuid(function(err, rows) {
-    req.body.id = rows[0].uuid;
-    req.body.timestamp = new Date().getTime();
-    for (var i = 0; i < req.body.definitions.length; i++) {
-      database.definitions.create(req.body.definitions[i]);
-    }
-    database.dictionary.create(req.body, function(err) {
-      if (err) {
-        return res.json({
-          error: err,
-        });
-      }
-      res.json({
-        message: 'entry created.',
-      });
+  var entry = new Dictionary({
+    lang: req.body.lang,
+    val: req.body.val,
+    type: req.body.type,
+    ipa: req.body.ipa,
+    definitions: req.body.definitions,
+    declension: req.body.declension,
+    conjugation: req.body.conjugation,
+    transcription: req.body.transcription,
+    related: req.body.related,
+  });
+  entry.save(function(err) {
+    if (err) { return res.status(500).json({ error: err }); }
+    res.json({
+      message: 'entry created',
     });
   });
 });
 
-/* GET dictionary entry */
-router.get('/:entry', function(req, res, next) {
-  res.json([
-    {
-      id: 'abc-123',
-      lang: 'wu',
-      trans: 'valár',
-      type: 'nom',
-      ipa: 'valaː',
-      val: 'valár',
-      definitions: [{
-        def: 'totalité',
-        note: 'vieille notion',
-      }, {
-        def: 'totalitaire',
-      },],
-    },
-    {
-      id: 'a12-ac2',
-      lang: 'na',
-      trans: 'valár',
-      type: 'verbe',
-      ipa: 'valaː',
-      val: 'valár',
-      definitions: [{
-        def: 'totaliser',
-      }],
-    },
-  ]);
-});
-
-/* DELETE dictionary entry */
-router.delete('/:id', function(req, res, next) {
-  database.definitions.delete(req.params.id, function(err) {
-    if (err) {
-      return res.json({
-        error: err,
-      });
-    }
-    database.dictionary.delete(req.params.id, function(err) {
-      res.json({
-        message: 'entry deleted.',
-      });
-    });
-  });
-});
-
-/* PUT dictionary entry */
+/* PUT user */
 router.put('/:id', function(req, res, next) {
-  req.body.id = req.params.id;
-  database.definitions.delete(req.params.id, function(err) {
-    if (err) {
-      return res.json({
-        error: err,
-      });
-    }
-    for (var i = 0; i < req.body.definitions.length; i++) {
-      database.definitions.create(req.body.definitions[i]);
-    }
-    database.dictionary.update(req.body, function(err) {
-      if (err) {
-        return res.json({
-          error: err,
-        });
-      }
+  Dictionary.findByIdAndUpdate(req.params.id, req.body,
+    function(err, doc) {
+      if (err) { return res.status(500).json({ error: err }); }
       res.json({
-        message: 'entry updated.',
+        message: 'entry updated',
       });
+    });
+});
+
+/* DELETE user */
+router.delete('/:id', function(req, res, next) {
+  Dictionary.remove({ _id: req.params.id }, function(err) {
+    res.json({
+      message: 'entry #' + req.params.id + ' has been removed.',
     });
   });
 });

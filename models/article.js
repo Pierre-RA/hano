@@ -1,14 +1,17 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var slug = require('slug');
 
-var articleSchema = new mongoose.Schema({
-  created: Date,
-  lastModified: {
-    type: Date,
-    default: Date.now,
+var schemaOptions = {
+  timestamps: true,
+  toJSON: {
+    virtuals: true
   },
+};
+
+var articleSchema = new mongoose.Schema({
   url: {
     type: String,
     required: true,
@@ -16,12 +19,13 @@ var articleSchema = new mongoose.Schema({
   },
   title: String,
   content: String,
-  categories: [],
+  categories: [ String ],
   era: {
     start: String,
     end: String,
   },
-});
+  author: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+}, schemaOptions);
 
 articleSchema.pre('save', function(next) {
   var article = this;
