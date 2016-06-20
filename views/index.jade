@@ -1,19 +1,30 @@
 extends layout
 
 block content
-  header.container-fluid
-    h1. #{i18n.hano}
-    div.box
-      input(type='text' placeholder='Input something')
-      ul
-        li
-          a(href='#'). #{i18n.history}
-        li
-          a(href='#'). #{i18n.land}
-        li
-          a(href='#'). #{i18n.people}
-        li
-          a(href='#'). #{i18n.lang}
-    ul
-      li
-        a(href='/articles/new') new article
+  header.container-fluid.cover
+    .half
+      .vertical-center.center
+        h1.head #{i18n.hano}
+    .half
+      .center
+        .row
+          fieldset.form-group.col-md-8.col-md-offset-2
+            input(type='text', placeholder='#{i18n.mainSearch}').form-control
+        ul.row
+          each val in navigation
+            li
+              a(href="#{val.url}")= val.title
+        if user
+          ul.row
+            each val in navigation
+              li
+                a(href="#{val.url}")= val.title
+    .bottom.center
+      span ©1999 - 2016 Pétrusque
+      span ©2001 - 2016 Hano
+    if user
+      .top
+        a(href="/sign-out") #{i18n.signOut}
+    else
+      .top
+        a(href="/sign-in") #{i18n.signIn}

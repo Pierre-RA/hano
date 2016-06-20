@@ -19,5 +19,13 @@
   "history": "History",
   "land": "Land",
   "people": "People",
-  "lang": "Lang"
+  "lang": "Lang",
+  "mainSearch": "Search into the world of Hano",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "password": "Password",
+  "confirmPassword": "Confirm your Password",
+  "email": "Email",
+  "name": "name",
+  "home": "home"
 }

@@ -2,15 +2,31 @@
 
 var express = require('express');
 var showdown  = require('showdown');
+var passport = require('passport');
 var router = express.Router();
 var i18n = require ('../utils/i18n.js');
 var translator = require('../utils/translator.js');
+var User = require('../models/user.js');
 var converter = new showdown.Converter();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', {
     i18n: i18n,
+    navigation: [{
+      url: '/categories/History',
+      title: i18n.history,
+    }, {
+      url: '/categories/Land',
+      title: i18n.land,
+    }, {
+      url: '/categories/People',
+      title: i18n.people,
+    }, {
+      url: '/categories/Lang',
+      title: i18n.lang,
+    },],
+    user: req.user,
   });
 });
 
@@ -74,6 +90,52 @@ router.get('/users/:url', function(req, res, next) {
     i18n: i18n,
     url: req.params.url,
   });
+});
+
+/* GET new-user */
+router.get('/new-user', User.isAdmin, function(req, res, next) {
+  res.render('users/edit', {
+    i18n: i18n,
+    method: 'post',
+  });
+});
+
+/* GET new-article */
+router.get('/new-article', User.isEditor, function(req, res, next) {
+  res.render('articles/edit', {
+    i18n: i18n,
+    method: 'post',
+  });
+});
+
+/* GET new-entry */
+router.get('/new-entry', User.isLinguist, function(req, res, next) {
+  res.render('dictionary/edit', {
+    i18n: i18n,
+    method: 'post',
+  });
+});
+
+/* GET signin */
+router.get('/sign-in', function(req, res, next) {
+  res.render('signin', {
+    i18n: i18n,
+    method: 'post',
+    message: req.flash('signInMessage'),
+  });
+});
+
+/* POST signin */
+router.post('/sign-in',
+  passport.authenticate('local', { failureRedirect: '/sign-in' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+/* GET signout */
+router.get('/sign-out', function(req, res) {
+  req.logout();
+  res.redirect('/');
 });
 
 module.exports = router;

@@ -8,6 +8,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var mongoose = require('mongoose');
+var passport = require('passport');
+var flash = require('connect-flash');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -16,6 +19,36 @@ var articles = require('./routes/articles');
 var categories = require('./routes/categories');
 
 var app = express();
+
+var LocalStrategy = require('passport-local').Strategy;
+var User = require('./models/user.js');
+
+passport.use(new LocalStrategy(
+  function(email, password, done) {
+    console.log('here');
+    User.findOne({ email: email }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false);
+      }
+      if (!user.comparePassword(password)) {
+        return done(null, false);
+      }
+      return done(null, user);
+    });
+  }
+));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  User.findOne({ _id: id}, function(err, user) {
+    if (err) { return cb(err); }
+    cb(null, user);
+  });
+});
 
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on('error', function() {
@@ -29,16 +62,25 @@ mongoose.connection.on('error', function() {
 app.set('views', [
   path.join(__dirname, 'views'),
   path.join(__dirname, 'views/articles'),
+  path.join(__dirname, 'views/dictionary'),
+  path.join(__dirname, 'views/users'),
 ]);
 app.set('view engine', 'jade');
 
-// Uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 app.use('/', routes);
 app.use('/api/users', users);
