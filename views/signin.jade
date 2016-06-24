@@ -1,5 +1,6 @@
 extends layout
 
 block content
-  div(method='#{method}')
-    include form/signin
+  div.cover.shaded
+    div(method='#{method}').col-md-4.col-md-offset-4.vertical-center.sign-in
+      include form/signin

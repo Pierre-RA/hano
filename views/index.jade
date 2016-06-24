@@ -15,10 +15,16 @@ block content
             li
               a(href="#{val.url}")= val.title
         if user
-          ul.row
-            each val in navigation
-              li
-                a(href="#{val.url}")= val.title
+          .controls
+            a(href="/new-article").
+              #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
+              Create article
+            a(href="/new-entry").
+              #[i.fa.fa-fw.fa-book(aria-hidden="true")]
+              Create entry
+            a(href="/new-user").
+              #[i.fa.fa-fw.fa-user-plus(aria-hidden="true")]
+              Create user
     .bottom.center
       span ©1999 - 2016 Pétrusque
       span ©2001 - 2016 Hano

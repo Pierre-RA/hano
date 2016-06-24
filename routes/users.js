@@ -26,7 +26,7 @@ router.get('/:url', function(req, res, next) {
 });
 
 /* POST user */
-router.post('/', function(req, res, next) {
+router.post('/', User.isAdmin, function(req, res, next) {
   var user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -42,7 +42,7 @@ router.post('/', function(req, res, next) {
 });
 
 /* PUT user */
-router.put('/:id', function(req, res, next) {
+router.put('/:id', User.isOwn, function(req, res, next) {
   User.findByIdAndUpdate(req.params.id, req.body,
     function(err, doc) {
       if (err) { return res.status(500).json({ error: err }); }
@@ -53,7 +53,7 @@ router.put('/:id', function(req, res, next) {
 });
 
 /* DELETE user */
-router.delete('/:id', function(req, res, next) {
+router.delete('/:id', User.isOwn, function(req, res, next) {
   User.remove({ _id: req.params.id }, function(err) {
     res.json({
       message: 'user #' + req.params.id + ' has been removed.',

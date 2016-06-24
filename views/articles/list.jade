@@ -6,9 +6,9 @@ block content
     div(ng-repeat="article in articles")
       h2 {{article.title}}
       a(ng-href="/articles/{{article.url}}")
-        i.icon-pencil Show
+        i.fa-fa-pencil Show
       a(ng-href="/EditArticle/{{article.url}}")
-        i.icon-pencil Edit
+        i.fa-fa-pencil Edit
     div.
       {{length}}
     div

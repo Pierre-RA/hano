@@ -23,18 +23,20 @@ var app = express();
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('./models/user.js');
 
-passport.use(new LocalStrategy(
-  function(email, password, done) {
-    console.log('here');
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true,
+  }, function(req, email, password, done) {
     User.findOne({ email: email }, function(err, user) {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false);
       }
-      if (!user.comparePassword(password)) {
-        return done(null, false);
-      }
-      return done(null, user);
+      user.comparePassword(password, function(err, isMatch) {
+        if (!isMatch) { return done(null, false); }
+        return done(null, user);
+      });
     });
   }
 ));
@@ -70,12 +72,13 @@ app.set('view engine', 'jade');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules')));
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  resave: true,
+  resave: false,
   saveUninitialized: true,
 }));
 app.use(passport.initialize());
@@ -103,8 +106,8 @@ if (app.get('env') === 'dev') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
+      error: JSON.stringify(err, null, 2),
       message: err.message,
-      error: err,
     });
   });
 }

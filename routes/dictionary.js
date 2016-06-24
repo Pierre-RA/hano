@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var Dictionary = require('../models/dictionary.js');
+var User = require('../models/user.js');
 
 /* GET dictionary listing. */
 router.get('/', function(req, res, next) {
@@ -26,7 +27,7 @@ router.get('/:trans', function(req, res, next) {
 });
 
 /* POST entry */
-router.post('/', function(req, res, next) {
+router.post('/', User.isLinguist, function(req, res, next) {
   var entry = new Dictionary({
     lang: req.body.lang,
     val: req.body.val,
@@ -47,7 +48,7 @@ router.post('/', function(req, res, next) {
 });
 
 /* PUT entry */
-router.put('/:id', function(req, res, next) {
+router.put('/:id', User.isLinguist, function(req, res, next) {
   Dictionary.findByIdAndUpdate(req.params.id, req.body,
     function(err, doc) {
       if (err) { return res.status(500).json({ error: err }); }
@@ -58,7 +59,7 @@ router.put('/:id', function(req, res, next) {
 });
 
 /* DELETE entry */
-router.delete('/:id', function(req, res, next) {
+router.delete('/:id', User.isAdmin, function(req, res, next) {
   Dictionary.remove({ _id: req.params.id }, function(err) {
     res.json({
       message: 'entry #' + req.params.id + ' has been removed.',

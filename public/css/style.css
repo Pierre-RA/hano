@@ -51,7 +51,7 @@ a:hover {
 }
 
 header {
-  background-image: url('../images/background.jpg');
+  /*background-image: url('../images/background.jpg');*/
   background-size: cover;
   font-size: 30px;
 }
@@ -78,4 +78,19 @@ header a {
 
 .top a {
   color: black;
+}
+
+.sign-in {
+  background-color: rgb(255,255,255);
+  border-bottom: solid 1px #dbdcdb;
+  border-radius: 5px;
+}
+
+.sign-in form, .sign-in p {
+  margin: 10px;
+}
+
+.shaded {
+  background-color: rgb(245,245,245);
+  background-color: rgba(0,0,0,0.1);
 }

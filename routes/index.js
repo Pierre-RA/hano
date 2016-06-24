@@ -1,13 +1,11 @@
 'use strict';
 
 var express = require('express');
-var showdown  = require('showdown');
 var passport = require('passport');
 var router = express.Router();
 var i18n = require ('../utils/i18n.js');
 var translator = require('../utils/translator.js');
 var User = require('../models/user.js');
-var converter = new showdown.Converter();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -34,6 +32,7 @@ router.get('/', function(req, res, next) {
 router.get('/articles/', function(req, res, next) {
   res.render('articles/list', {
     i18n: i18n,
+    user: req.user,
   });
 });
 
@@ -42,6 +41,7 @@ router.get('/articles/:url', function(req, res, next) {
   res.render('articles/article', {
     i18n: i18n,
     url: req.params.url,
+    user: req.user,
   });
 });
 

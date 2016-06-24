@@ -14,7 +14,7 @@ var schemaOptions = {
 var userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
-  password: { type: String, select: false },
+  password: { type: String },
   url: {
     type: String,
     required: true,
@@ -64,6 +64,15 @@ userSchema.statics.isEditor = function isEditor(req, res, next) {
 
 userSchema.statics.isLinguist = function isLinguist(req, res, next) {
   if (req.isAuthenticated() && (req.user.admin || req.user.linguist)) {
+    return next();
+  }
+
+  res.redirect('/sign-in');
+};
+
+userSchema.statics.isOwn = function isLinguist(req, res, next) {
+  if (req.isAuthenticated() &&
+    (req.user.admin || req.user._id === req.params.id)) {
     return next();
   }
 

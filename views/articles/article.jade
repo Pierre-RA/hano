@@ -1,12 +1,11 @@
 extends ../layout
 
 block content
-  div(ng-controller='ArticleController', url='#{article.url}')
-    h1= article.title
-    div.article!= translator.parse(converter.makeHtml(article.content))
-    div.categories
-      each cat in article.categories
-        a(href="/categories/#{cat.text}") #{cat.text} 
+  div(ng-controller='ArticleController', url='#{url}')
+    h1 {{article.title}}
+    div.article(marked="article.content")
+    div.categories(ng-repeat="category in article.categories")
+      a(href="/categories/{{category}}") {{category}} 
     if user
       div.edition
         button(class="btn btn-info", ng-click="form = !form")

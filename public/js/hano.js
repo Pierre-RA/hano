@@ -1,10 +1,14 @@
 'use strict';
 
-angular.module('hano', ['ui.bootstrap', 'ngTagsInput'])
+angular.module('hano', [
+    'ui.bootstrap',
+    'ngTagsInput',
+    'hc.marked',
+  ])
   .controller('ArticleListController', function($scope, $http) {
     $http.get('/api/articles').success(function(data) {
-      $scope.articles = data.articles;
-      $scope.length = data.articles.length;
+      $scope.articles = data;
+      $scope.length = data.length;
     });
   })
   .controller('ArticleFormController', function($scope, $attrs, $http) {
@@ -29,7 +33,7 @@ angular.module('hano', ['ui.bootstrap', 'ngTagsInput'])
   })
   .controller('ArticleController', function($scope, $attrs, $http) {
     $http.get('/api/articles/' + $attrs.url).success(function(data) {
-      $scope.article = data.article;
+      $scope.article = data;
     });
     $scope.form = false;
   })
