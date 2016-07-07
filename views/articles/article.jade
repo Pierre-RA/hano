@@ -1,11 +1,14 @@
 extends ../layout
 
 block content
-  div(ng-controller='ArticleController', url='#{url}')
+  div(ng-controller='ArticleController', url='#{url}').flow.container.article
     h1 {{article.title}}
-    div.article(marked="article.content")
-    div.categories(ng-repeat="category in article.categories")
-      a(href="/categories/{{category}}") {{category}} 
+    div(marked="article.content")
+    div.categories
+      a(href="/categories/{{category}}", ng-repeat="category in article.categories").label.label-primary
+        i.fa.fa-fw.fa-tag(aria-hidden="true")
+        span(ng-show="category.text") {{category.text}}
+        span(ng-hide="category.text") {{category}}
     if user
       div.edition
         button(class="btn btn-info", ng-click="form = !form")

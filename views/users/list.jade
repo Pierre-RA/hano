@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  div(ng-controller='UsersListController')
+  div(ng-controller='UsersListController').flow
     h1 Users
     div(ng-repeat="user in users")
       h2 {{user.name}}

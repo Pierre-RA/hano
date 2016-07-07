@@ -7,6 +7,7 @@ body {
   font-family: sans-serif;
   height: 100%;
   font-weight: 300;
+  background-color: rgb(245,245,245);
 }
 
 a {
@@ -17,25 +18,27 @@ a:hover {
   text-decoration: underline;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+}
+
 .cover {
   position: relative;
   height: 100%;
+  width: 100%;
+}
+
+.flow {
+  margin-top: 70px;
 }
 
 .vertical-center {
-  position: absolute;
+  position: relative;
   top: 50%;
-  width: 100%;
   transform: translateY(-50%);
 }
 
-.center {
-  text-align: center;
-}
-
 .bottom {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   font-size: 20px;
 }
@@ -44,53 +47,40 @@ a:hover {
   padding: 5px 20px;
 }
 
-.cover .half {
+.half {
   height: 50%;
   width: 100%;
   position: relative;
 }
 
-header {
-  /*background-image: url('../images/background.jpg');*/
+.header {
   background-size: cover;
-  font-size: 30px;
+  font-size: 20pt;
 }
 
-header ul li {
-  display: inline-block;
-  padding: 5px 20px;
-}
-
-header a {
+.header a {
   color: black;
 }
 
-.head {
-  font-size: 70px;
-  font-weight: 300;
+.title {
+  font-size: 50pt;
 }
 
-.top {
-  position: absolute;
-  top: 50px;
-  right: 50px;
-}
-
-.top a {
-  color: black;
-}
-
-.sign-in {
-  background-color: rgb(255,255,255);
+.box, .article, .sign-in {
+  padding: 20px;
   border-bottom: solid 1px #dbdcdb;
+  background-color: white;
   border-radius: 5px;
 }
 
-.sign-in form, .sign-in p {
-  margin: 10px;
+.box, .article {
+  margin: 20px;
 }
 
-.shaded {
-  background-color: rgb(245,245,245);
-  background-color: rgba(0,0,0,0.1);
+.label {
+  margin: 5px;
+}
+
+.debug {
+  background-color: rgb(200,0,200);
 }

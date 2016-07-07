@@ -27,5 +27,16 @@
   "confirmPassword": "Confirm your Password",
   "email": "Email",
   "name": "name",
-  "home": "home"
+  "home": "home",
+  "articles": "articles",
+  "dictionary": "dictionary",
+  "show": "show",
+  "createUser": "Add a new User",
+  "createArticle": "Create Article",
+  "createEntry": "Create Entry",
+  "administration": "administration",
+  "toggleNavigation": "toggle navigation",
+  "error": "Error",
+  "pageNotFound": "Page not found",
+  "categories": "Categories"
 }

@@ -1,9 +1,10 @@
 extends ../layout
 
 block content
-  div.container(ng-controller="EntryController", new="#{form}", url="#{url}")
-    h1 #{url}
-    div.entry(ng-show="showEntry", ng-repeat="entry in entries")
+  div(ng-controller="EntryController", url="#{url}").flow
+    div.container
+      h1 {{title}} {{count}}
+    div.container(ng-repeat="entry in entries")
       h2(class='{{entry.lang}}') {{entry.val}}
       p.subtitle {{entry.trans}}
         span(ng-if="entry.type") {{entry.type}}
@@ -27,6 +28,15 @@ block content
         .related.
           {{entry.related}}
       if user
-        button(class="btn btn-info", ng-click="showEdition = !showEdition")
-          span(class="glyphicon glyphicon-pencil")
+        button(class="btn btn-info", ng-click="showEdition = !showEdition").
+          #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
+          #{i18n.edit}
         div.edition(ng-show="showEdition")
+          include ../form/entry.jade
+    if user
+      div.container
+        button(class="btn btn-info", ng-click="showEdition = !showEdition").
+          #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
+          #{i18n.createEntry}
+        div.edition(ng-show="showEdition")
+          include ../form/entry.jade

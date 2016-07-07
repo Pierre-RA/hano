@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  div(ng-controller='UserController', url=url)
+  div(ng-controller='UserController', url=url).flow
     h1 {{user.name}}
     div
       a(ng-href="/users/{{user.url}}")

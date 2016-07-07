@@ -1,12 +1,71 @@
 'use strict';
 
+function parseLinks(text) {
+  var result = '';
+  result = text.replace(/\[art:([^\]]+)\]/, '<a href="/articles/$1">$1</a>');
+  result =
+    result.replace(/\[dic:([^\]]+)\]/, '<a href="/dictionary/$1">$1</a>');
+  return result;
+}
+
+function parseWutopian(text) {
+  return text.replace(/\[wut:([^\]]+)\]/,
+    '<span class="wutopian">$1</span>');
+}
+
+function parseNardanskh(text) {
+  return text.replace(/\[nar:([^\]]+)\]/,
+    '<span class="nardanskh">$1</span>');
+}
+
+function parseCalendar(text) {
+  return text.replace(/\[ic:([^\]]+)\]/,
+    '<a href="/calendar/$1">IC $1</a>');
+}
+
+function parse(text) {
+  var result = parseLinks(text);
+  result = parseWutopian(result);
+  result = parseNardanskh(result);
+  result = parseCalendar(result);
+  return result;
+}
+
 angular.module('hano', [
     'ui.bootstrap',
     'ngTagsInput',
     'hc.marked',
   ])
-  .controller('ArticleListController', function($scope, $http) {
-    $http.get('/api/articles').success(function(data) {
+  .config(['markedProvider', function(markedProvider) {
+      markedProvider.setOptions({
+        gfm: true,
+        tables: true,
+      });
+      markedProvider.setRenderer({
+        table: function(header, body) {
+          return '<table class="table table-stripped">\n' +
+          '<thead>\n' +
+          header +
+          '</thead>\n' +
+          '<tbody>\n' +
+          body +
+          '</tbody>\n' +
+          '</table>\n';
+        },
+        paragraph: function(text) {
+          return '<p>' + parse(text) + '</p>\n';
+        },
+      });
+    },
+  ])
+  .controller('ArticleListController', function($scope, $attrs, $http) {
+    var query = '/api/articles';
+    if ($attrs.category !== 'undefined' &&
+      typeof $attrs.category === 'string') {
+      query += '?q=';
+      query += $attrs.category;
+    }
+    $http.get(query).success(function(data) {
       $scope.articles = data;
       $scope.length = data.length;
     });
@@ -49,20 +108,18 @@ angular.module('hano', [
     });
   })
   .controller('EntryController', function($scope, $attrs, $http) {
-    $scope.showEntry = !$attrs.form;
-    $scope.showEdition = $attrs.form;
     $scope.entries = {
       entry: {},
     };
-    if ($attrs.new === 'false') {
-      $http.get('/api/dictionary/' + $attrs.url)
-        .then(function(data) {
-          $scope.entries = data.data;
-          console.log($scope.entries);
-        }, function(err) {
-          console.log(err);
-        });
-    }
+    var url = $attrs.url === '*' ? '' : $attrs.url;
+    $scope.title = url || 'dictionary';
+    $http.get('/api/dictionary/' + url)
+      .then(function(data) {
+        $scope.entries = data.data;
+      }, function(err) {
+        console.log(err);
+      });
+
     $scope.update = function(id) {
       if (id) {
         var entry;
@@ -84,7 +141,7 @@ angular.module('hano', [
         $http({
           method: 'post',
           url: '/api/dictionary',
-          data: $scope.entries[0],
+          data: $scope.entry,
         }).then(function() {
           console.log('success');
         }, function(err) {

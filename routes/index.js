@@ -10,7 +10,7 @@ var User = require('../models/user.js');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', {
-    i18n: i18n,
+    title: i18n.hano,
     navigation: [{
       url: '/categories/History',
       title: i18n.history,
@@ -31,15 +31,14 @@ router.get('/', function(req, res, next) {
 /* GET list articles */
 router.get('/articles/', function(req, res, next) {
   res.render('articles/list', {
-    i18n: i18n,
     user: req.user,
+    title: i18n.article,
   });
 });
 
 /* GET article */
 router.get('/articles/:url', function(req, res, next) {
   res.render('articles/article', {
-    i18n: i18n,
     url: req.params.url,
     user: req.user,
   });
@@ -48,80 +47,81 @@ router.get('/articles/:url', function(req, res, next) {
 /* GET list categories */
 router.get('/categories/', function(req, res, next) {
   res.render('articles/list', {
-    i18n: i18n,
-    categories: true,
+    category: true,
+    title: i18n.categories,
   });
 });
 
 /* GET category */
 router.get('/categories/:url', function(req, res, next) {
   res.render('articles/list', {
-    i18n: i18n,
-    categories: true,
-    url: req.params.url,
+    category: req.params.url,
+    user: req.user,
+    title: req.params.url,
   });
 });
 
-/* GET list dictionary */
+/* GET dictionary list of words */
 router.get('/dictionary/', function(req, res, next) {
-  res.render('dictionary/list', {
-    i18n: i18n,
+  res.render('dictionary/entry', {
+    url: '*',
+    user: req.user,
   });
 });
 
 /* GET entry */
 router.get('/dictionary/:url', function(req, res, next) {
   res.render('dictionary/entry', {
-    i18n: i18n,
     url: req.params.url,
+    user: req.user,
   });
 });
 
 /* GET list users */
 router.get('/users/', function(req, res, next) {
   res.render('users/list', {
-    i18n: i18n,
+    user: req.user,
   });
 });
 
 /* GET user */
 router.get('/users/:url', function(req, res, next) {
   res.render('users/user', {
-    i18n: i18n,
     url: req.params.url,
+    user: req.user,
   });
 });
 
 /* GET new-user */
 router.get('/new-user', User.isAdmin, function(req, res, next) {
   res.render('users/edit', {
-    i18n: i18n,
     method: 'post',
+    user: req.user,
   });
 });
 
 /* GET new-article */
 router.get('/new-article', User.isEditor, function(req, res, next) {
   res.render('articles/edit', {
-    i18n: i18n,
     method: 'post',
+    user: req.user,
   });
 });
 
 /* GET new-entry */
 router.get('/new-entry', User.isLinguist, function(req, res, next) {
   res.render('dictionary/edit', {
-    i18n: i18n,
     method: 'post',
+    user: req.user,
   });
 });
 
 /* GET signin */
 router.get('/sign-in', function(req, res, next) {
   res.render('signin', {
-    i18n: i18n,
     method: 'post',
     message: req.flash('signInMessage'),
+    user: req.user,
   });
 });
 

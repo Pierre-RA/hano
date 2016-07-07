@@ -28,6 +28,7 @@ router.get('/:trans', function(req, res, next) {
 
 /* POST entry */
 router.post('/', User.isLinguist, function(req, res, next) {
+  console.log(req.body);
   var entry = new Dictionary({
     lang: req.body.lang,
     val: req.body.val,

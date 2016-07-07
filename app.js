@@ -18,6 +18,8 @@ var dictionary = require('./routes/dictionary');
 var articles = require('./routes/articles');
 var categories = require('./routes/categories');
 
+var i18n = require ('./utils/i18n.js');
+
 var app = express();
 
 var LocalStrategy = require('passport-local').Strategy;
@@ -91,6 +93,8 @@ app.use('/api/dictionary', dictionary);
 app.use('/api/articles', articles);
 app.use('/api/categories', categories);
 
+app.locals.i18n = i18n;
+
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -99,26 +103,14 @@ app.use(function(req, res, next) {
 });
 
 // Error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'dev') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      error: JSON.stringify(err, null, 2),
-      message: err.message,
-    });
-  });
-}
-
-// Production error handler
-// no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
+  var error = app.get('env') === 'dev' ? err : {};
   res.render('error', {
+    status: res.status,
     message: err.message,
-    error: {},
+    error: error,
+    user: req.user,
   });
 });
 

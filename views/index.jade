@@ -1,36 +1,18 @@
 extends layout
 
 block content
-  header.container-fluid.cover
+  .container-fluid.cover.text-center.header
     .half
       .vertical-center.center
-        h1.head #{i18n.hano}
+        h1.title #{i18n.hano}
     .half
-      .center
-        .row
-          fieldset.form-group.col-md-8.col-md-offset-2
-            input(type='text', placeholder='#{i18n.mainSearch}').form-control
-        ul.row
-          each val in navigation
-            li
-              a(href="#{val.url}")= val.title
-        if user
-          .controls
-            a(href="/new-article").
-              #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
-              Create article
-            a(href="/new-entry").
-              #[i.fa.fa-fw.fa-book(aria-hidden="true")]
-              Create entry
-            a(href="/new-user").
-              #[i.fa.fa-fw.fa-user-plus(aria-hidden="true")]
-              Create user
-    .bottom.center
-      span ©1999 - 2016 Pétrusque
-      span ©2001 - 2016 Hano
-    if user
-      .top
-        a(href="/sign-out") #{i18n.signOut}
-    else
-      .top
-        a(href="/sign-in") #{i18n.signIn}
+      .row
+        fieldset.form-group.col-md-8.col-md-offset-2
+          input(type='text', placeholder='#{i18n.mainSearch}').form-control
+      .row
+        .col-md-6.col-md-offset-3
+          .row
+            each val in navigation
+              .col-md-3.col-xs-6
+                a(href="#{val.url}")= val.title
+  include articles/list

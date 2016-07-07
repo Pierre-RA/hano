@@ -8,7 +8,11 @@ var router = express.Router();
 
 /* GET arrticle listing. */
 router.get('/', function(req, res, next) {
-  Article.find({}, function(err, articles) {
+  var query = {};
+  if (req.query.q) {
+    query = { categories: { $in: [req.query.q] } };
+  }
+  Article.find(query).sort({updatedAt: 'desc'}).exec(function(err, articles) {
     if (err) { return res.status(500).json({ error: err }); }
     res.json(articles);
   });
@@ -16,7 +20,7 @@ router.get('/', function(req, res, next) {
 
 /* GET article */
 router.get('/:url', function(req, res, next) {
-  Article.findOne({ url: req.params.url }, function(err, article) {
+  Article.findOne({ url: slug(req.params.url) }, function(err, article) {
     if (!article) {
       return res.status(404).json({
         message: 'Article not found.',

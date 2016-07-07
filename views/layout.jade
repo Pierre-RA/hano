@@ -1,14 +1,14 @@
 doctype html
 html(ng-app="hano")
   head
-    title= title
+    title #{i18n.hano}
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(rel='stylesheet', href='/css/style.css')
     link(rel='stylesheet', href='/angular-ui-bootstrap/dist/ui-bootstrap-csp.css')
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
     link(rel='stylesheet', href='/ng-tags-input/build/ng-tags-input.bootstrap.min.css')
     link(rel='stylesheet', href='/ng-tags-input/build/ng-tags-input.min.css')
     link(rel='stylesheet', href='/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/css/style.css')
     script(src='/angular/angular.min.js')
     script(src='/angular-ui-bootstrap/dist/ui-bootstrap.js')
     script(src='/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js')
@@ -17,4 +17,8 @@ html(ng-app="hano")
     script(src='/angular-marked/dist/angular-marked.js')
     script(src='/js/hano.js')
   body
+    include header.jade
     block content
+    .bottom.text-center
+      span ©1999 - 2016 Pétrusque
+      span ©2001 - 2016 Hano

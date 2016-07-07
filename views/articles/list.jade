@@ -1,15 +1,17 @@
 extends ../layout
 
 block content
-  div(ng-controller='ArticleListController')
-    h1 Articles
-    div(ng-repeat="article in articles")
+  div(ng-controller='ArticleListController', category='#{category}').flow.container
+    h1 #{title}
+    div(ng-repeat="article in articles").box
       h2 {{article.title}}
-      a(ng-href="/articles/{{article.url}}")
-        i.fa-fa-pencil Show
-      a(ng-href="/EditArticle/{{article.url}}")
-        i.fa-fa-pencil Edit
-    div.
-      {{length}}
+      a(ng-href="/articles/{{article.url}}").
+        #[i.fa.fa-fw.fa-eye(aria-hidden="true")]
+        #{i18n.show}
+      a(ng-href="/articles/{{article.url}}?edit=true").
+        #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
+        #{i18n.edit}
     div
-      a(href="/NewArticle") {{i18n.new}} - -
+      a(href="/new-article").
+        #[i.fa.fa-fw.fa-plus(aria-hidden="true")]
+        #{i18n.new}

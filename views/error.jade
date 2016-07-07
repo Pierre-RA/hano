@@ -1,6 +1,10 @@
 extends layout
 
 block content
-  h1 Error
-  pre #{message}
-  pre #{error}
+  div.cover
+    if status = 404
+      h1 #{i18n.pageNotFound}
+    else
+      h1 #{i18n.error}
+      pre #{message}
+      pre #{error}
