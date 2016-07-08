@@ -111,6 +111,8 @@ angular.module('hano', [
     $scope.entries = {
       entry: {},
     };
+    $scope.success = false;
+    $scope.failure = false;
     var url = $attrs.url === '*' ? '' : $attrs.url;
     $scope.title = url || 'dictionary';
     $http.get('/api/dictionary/' + url)
@@ -120,17 +122,21 @@ angular.module('hano', [
         console.log(err);
       });
 
-    $scope.update = function(id) {
+    $scope.prepend = function(row) {
+      if (row) {
+        $scope.entries[row].definitions.push({});
+      } else {
+        $scope.entry.definitions = [];
+        $scope.entry.definitions.push({});
+      }
+    };
+
+    $scope.update = function(index, id) {
       if (id) {
-        var entry;
-        for (var i = 0; i < $scope.entries.length; i++) {
-          if ($scope.entries[i].id === id) {
-            entry = $scope.entries[1];
-          }
-        }
+        var entry = $scope.entries[index];
         $http({
           method: 'put',
-          url: '/api/dictionary',
+          url: '/api/dictionary/' + id,
           data: entry,
         }).then(function() {
           console.log('success');

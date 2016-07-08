@@ -15,6 +15,7 @@ router.get('/', function(req, res, next) {
 
 /* GET entry */
 router.get('/:trans', function(req, res, next) {
+  console.log(req.params.trans);
   Dictionary.find({ transcription: decodeURI(req.params.trans) },
     function(err, entries) {
     if (!entries) {
@@ -28,7 +29,6 @@ router.get('/:trans', function(req, res, next) {
 
 /* POST entry */
 router.post('/', User.isLinguist, function(req, res, next) {
-  console.log(req.body);
   var entry = new Dictionary({
     lang: req.body.lang,
     val: req.body.val,
@@ -39,6 +39,7 @@ router.post('/', User.isLinguist, function(req, res, next) {
     conjugation: req.body.conjugation,
     transcription: req.body.transcription,
     related: req.body.related,
+    author: req.user._id,
   });
   entry.save(function(err) {
     if (err) { return res.status(500).json({ error: err }); }

@@ -1,42 +1,42 @@
 extends ../layout
 
 block content
-  div(ng-controller="EntryController", url="#{url}").flow
+  div(ng-controller="EntryController", url="#{url}").flow.container.entry
     div.container
       h1 {{title}} {{count}}
-    div.container(ng-repeat="entry in entries")
-      h2(class='{{entry.lang}}') {{entry.val}}
-      p.subtitle {{entry.trans}}
-        span(ng-if="entry.type") {{entry.type}}
-        span(ng-if="entry.ipa") {{entry.ipa}}
+    div(ng-repeat="entry in entries").box
+      h2(class='{{entry.lang}}')
+        a(id="{{entry.id}}")
+        a(href="/dictionary/{{entry.transcription}}#{{entry.id}}").black {{entry.transcription}}
+      p.subtitle 
+        span {{entry.transcription}}
+        span(ng-if="entry.type").italic {{entry.type}}
+        span(ng-if="entry.ipa") /{{entry.ipa}}/
       ol
-        li(ng-repeat="definition in entry.definitions") {{definition.def}}
-          i(ng-if="definition.note") {{definition.note}}
+        li(ng-repeat="definition in entry.definitions track by $index")
+          span.note(ng-if="definition.note") ({{definition.note}})
+          span.def {{definition.def}}
+          span.comment(ng-if="definition.comment") {{definition.comment}}
       div(ng-if="entry.declension")
         .declension.
           {{entry.declension}}
       div(ng-if="entry.conjugation")
         .conjugation.
           {{entry.conjugation}}
-      div(ng-if="entry.transcription")
-        .transcription.
-          {{entry.transcription}}
       div(ng-if="entry.synonyms")
         .synonyms.
           {{entry.synonyms}}
       div(ng-if="entry.related")
-        .related.
-          {{entry.related}}
+        .related
+          span(ng-repeat="relatedWord in entry.related") {{relatedWord}}
       if user
-        button(class="btn btn-info", ng-click="showEdition = !showEdition").
+        button(ng-click="showEdition = !showEdition").btn.btn-link.
           #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
           #{i18n.edit}
         div.edition(ng-show="showEdition")
           include ../form/entry.jade
     if user
-      div.container
-        button(class="btn btn-info", ng-click="showEdition = !showEdition").
-          #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
-          #{i18n.createEntry}
-        div.edition(ng-show="showEdition")
-          include ../form/entry.jade
+      div
+        a(href="/new-entry").
+          #[i.fa.fa-fw.fa-plus(aria-hidden="true")]
+          #{i18n.new}

@@ -22,7 +22,7 @@ export MONGODB_URI=*************
 export SESSION_SECRET=**************
 ```
 
-MONGODB_URI must a valid uri to a running mongo db server.
+MONGODB_URI must be a valid uri to a running mongo db server.
 SESSION_SECRET must be a string.
 
 Test

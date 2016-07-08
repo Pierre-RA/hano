@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'Wutopian';
+    src: url('/fonts/wutopian_light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Nardanskh';
+    src: url('/fonts/nardanskh_medium.ttf') format('truetype');
+}
+
 html {
   height: 100%;
   width: 100%;
@@ -79,6 +89,59 @@ h1, h2, h3, h4, h5, h6 {
 
 .label {
   margin: 5px;
+}
+
+.subtitle span {
+  border-left: rgb(190,215,215) solid 1px;
+  padding-left: 10px;
+  margin-left: 10px;
+  color: rgb(80,105,105);
+}
+
+.subtitle span:first-of-type {
+  border-left: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.def, .note, .comment {
+  padding-left: 20px;
+  font-weight: 300;
+}
+
+.def {
+  font-weight: 400;
+}
+
+.note {
+  color: rgb(80,105,105);
+}
+
+.comment {
+  font-style: italic;
+  display: block;
+  color: rgb(115,115,115);
+}
+
+.entry li {
+  padding-top: 10px;
+  font-weight: 600;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.wutopian {
+  font-family: Wutopian;
+}
+
+.nardanskh {
+  font-family: Nardanskh;
+}
+
+.black {
+  color: black;
 }
 
 .debug {

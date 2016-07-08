@@ -38,5 +38,6 @@
   "toggleNavigation": "toggle navigation",
   "error": "Error",
   "pageNotFound": "Page not found",
-  "categories": "Categories"
+  "categories": "Categories",
+  "comment": "comment"
 }
