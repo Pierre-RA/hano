@@ -4,11 +4,11 @@
   "private": true,
   "author": "Pierre Repetto-Andipatin <pierre@anthillsolutions.ch",
   "scripts": {
-    "cs": "jscs app.js routes/*.js test/unit/*.js test/server/*.js",
-    "lint": "jshint app.js routes/*.js test/unit/*.js test/server/*.js",
+    "cs": "jscs app.js routes/*.js test/server/*.js",
+    "lint": "jshint app.js routes/*.js test/server/*.js",
     "init": "node ./bin/prepare.js",
     "start": "node ./bin/www",
-    "test": "export NODE_ENV=test && npm run lint && npm run cs && istanbul cover _mocha test/unit/ test/server/ -- -R spec"
+    "test": "export NODE_ENV=test && npm run lint && npm run cs && istanbul cover _mocha test/server/ -- -R spec"
   },
   "dependencies": {
     "angular": "^1.5.7",

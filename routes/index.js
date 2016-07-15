@@ -4,7 +4,6 @@ var express = require('express');
 var passport = require('passport');
 var router = express.Router();
 var i18n = require ('../utils/i18n.js');
-var translator = require('../utils/translator.js');
 var User = require('../models/user.js');
 
 /* GET home page. */
