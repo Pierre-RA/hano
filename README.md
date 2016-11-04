@@ -1,6 +1,9 @@
 HANO
 ====
 
+[![Build Status](https://travis-ci.org/Pierre-RA/hano.svg?branch=master)](https://travis-ci.org/Pierre-RA/hano)
+[![dependencies Status](https://david-dm.org/Pierre-RA/hano/status.svg)](https://david-dm.org/Pierre-RA/hano)
+
 Unified Hano project.
 
 The project has a blog part and a dictionary part.
