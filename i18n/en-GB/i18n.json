@@ -39,5 +39,6 @@
   "error": "Error",
   "pageNotFound": "Page not found",
   "categories": "Categories",
-  "comment": "comment"
+  "comment": "comment",
+  "delete": "delete"
 }

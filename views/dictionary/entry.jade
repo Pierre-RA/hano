@@ -8,7 +8,7 @@ block content
       h2(class='{{entry.lang}}')
         a(id="{{entry.id}}")
         a(href="/dictionary/{{entry.transcription}}#{{entry.id}}").black {{entry.transcription}}
-      p.subtitle 
+      p.subtitle
         span {{entry.transcription}}
         span(ng-if="entry.type").italic {{entry.type}}
         span(ng-if="entry.ipa") /{{entry.ipa}}/
@@ -33,6 +33,9 @@ block content
         button(ng-click="showEdition = !showEdition").btn.btn-link.
           #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
           #{i18n.edit}
+        button(ng-click="delete(entry.id)").btn.btn-link.
+          #[i.fa.fa-fw.fa-delete(aria-hidden="true")]
+          #{i18n.delete}
         div.edition(ng-show="showEdition")
           include ../form/entry.jade
     if user

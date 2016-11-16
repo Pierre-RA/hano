@@ -155,4 +155,16 @@ angular.module('hano', [
         });
       }
     };
+
+    $scope.delete = function(id) {
+      $http({
+        method: 'delete',
+        url: '/api/dictionary/' + id,
+      }).then(function() {
+        $scope.entries[id];
+        console.log('success');
+      }, function(err) {
+        console.log(err);
+      });
+    };
   });
