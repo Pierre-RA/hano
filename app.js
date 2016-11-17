@@ -107,7 +107,8 @@ app.use(function(req, res, next) {
 // Error handlers
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  var error = app.get('env') === 'dev' ? err : {};
+  var error = app.get('env') === 'development' ? err : {};
+  console.log(error);
   res.render('error', {
     status: res.status,
     message: err.message,
