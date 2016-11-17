@@ -2,14 +2,14 @@
 
 function parseLinks(text) {
   var result = '';
-  result = text.replace(/\[art:([^\]]+)\]/, '<a href="/articles/$1">$1</a>');
+  result = text.replace(/\[art:([^\]]+)\]/g, '<a href="/articles/$1">$1</a>');
   result =
-    result.replace(/\[dic:([^\]]+)\]/, '<a href="/dictionary/$1">$1</a>');
+    result.replace(/\[dic:([^\]]+)\]/g, '<a href="/dictionary/$1">$1</a>');
   return result;
 }
 
 function parseWutopian(text) {
-  return text.replace(/\[wut:([^\]]+)\]/, function(str, p1) {
+  return text.replace(/\[wut:([^\]]+)\]/g, function(str, p1) {
     if (p1) {
       p1 = p1.replace(/rr\b/g, '-');
       return '<span class="wutopian">' + p1 + '</span>';
@@ -18,7 +18,7 @@ function parseWutopian(text) {
 }
 
 function parseNardanskh(text) {
-  return text.replace(/\[wut:([^\]]+)\]/, function(str, p1) {
+  return text.replace(/\[wut:([^\]]+)\]/g, function(str, p1) {
     if (p1) {
       p1 = p1.replace(/rr\b/g, '-');
       return '<span class="nardanskh">' + p1 + '</span>';
@@ -186,6 +186,13 @@ angular.module('hano', [
     return function(x) {
       if (x) {
         return x.replace(/rr\b/, '-');
+      }
+    };
+  })
+  .filter('parseLinks', function() {
+    return function(text) {
+      if (text) {
+        return parseLinks(text);
       }
     };
   });

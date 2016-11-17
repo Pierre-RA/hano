@@ -3,7 +3,7 @@ extends ../layout
 block content
   div(ng-controller='ArticleController', url='#{url}').flow.container.article
     h1 {{article.title}}
-    div(marked="article.content")
+    div(marked="article.content | parseLinks")
     div.categories
       a(href="/categories/{{category}}", ng-repeat="category in article.categories").label.label-primary
         i.fa.fa-fw.fa-tag(aria-hidden="true")
