@@ -7,7 +7,8 @@ block content
     div(ng-repeat="entry in entries").box
       h2(class='{{entry.lang}}')
         a(id="{{entry.id}}")
-        a(href="/dictionary/{{entry.transcription}}#{{entry.id}}").black {{entry.transcription}}
+        a(href="/dictionary/{{entry.transcription}}#{{entry.id}}").black
+          | {{entry.transcription | outputResult}}
       p.subtitle
         span {{entry.transcription}}
         span(ng-if="entry.type").italic {{entry.type}}

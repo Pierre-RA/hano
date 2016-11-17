@@ -9,13 +9,21 @@ function parseLinks(text) {
 }
 
 function parseWutopian(text) {
-  return text.replace(/\[wut:([^\]]+)\]/,
-    '<span class="wutopian">$1</span>');
+  return text.replace(/\[wut:([^\]]+)\]/, function(str, p1) {
+    if (p1) {
+      p1 = p1.replace(/rr\b/g, '-');
+      return '<span class="wutopian">' + p1 + '</span>';
+    }
+  });
 }
 
 function parseNardanskh(text) {
-  return text.replace(/\[nar:([^\]]+)\]/,
-    '<span class="nardanskh">$1</span>');
+  return text.replace(/\[wut:([^\]]+)\]/, function(str, p1) {
+    if (p1) {
+      p1 = p1.replace(/rr\b/g, '-');
+      return '<span class="nardanskh">' + p1 + '</span>';
+    }
+  });
 }
 
 function parseCalendar(text) {
@@ -115,6 +123,7 @@ angular.module('hano', [
     $scope.failure = false;
     var url = $attrs.url === '*' ? '' : $attrs.url;
     $scope.title = url || 'dictionary';
+
     $scope.load = function() {
       $http.get('/api/dictionary/' + url)
       .then(function(data) {
@@ -123,6 +132,8 @@ angular.module('hano', [
         console.log(err);
       });
     };
+
+    $scope.load();
 
     $scope.prepend = function(row) {
       if (row) {
@@ -169,5 +180,12 @@ angular.module('hano', [
       }, function(err) {
         console.log(err);
       });
+    };
+  })
+  .filter('outputResult', function() {
+    return function(x) {
+      if (x) {
+        return x.replace(/rr\b/, '-');
+      }
     };
   });

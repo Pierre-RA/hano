@@ -9,8 +9,12 @@ angular.module('hano.translator', [])
     return result;
   })
   .factory('parseWutopian', function(text) {
-    return text.replace(/\[wut:([^\]]+)\]/,
-      '<span class="wutopian">$1</span>');
+    return text.replace(/\[wut:([^\]]+)\]/, function(str, p1) {
+      if (p1) {
+        p1 = p1.replace(/rr\b/g, '-');
+        return '<span class="wutopian">' + p1 + '</span>';
+      }
+    });
   })
   .factory('parseNardanskh', function(text) {
     return text.replace(/\[nar:([^\]]+)\]/,
