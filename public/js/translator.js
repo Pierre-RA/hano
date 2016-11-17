@@ -1,7 +1,6 @@
 'use strict';
 
 angular.module('hano.translator', [])
-  .constant('MODULE_VERSION', '0.0.1')
   .factory('parseLinks', function(text) {
     var result = '';
     result = text.replace(/\[art:([^\]]+)\]/, '<a href="/articles/$1">$1</a>');

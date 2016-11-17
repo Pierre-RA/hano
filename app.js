@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config({silent: true});
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -94,6 +95,7 @@ app.use('/api/articles', articles);
 app.use('/api/categories', categories);
 
 app.locals.i18n = i18n;
+app.locals.version = require('./package.json').version;
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -115,12 +115,14 @@ angular.module('hano', [
     $scope.failure = false;
     var url = $attrs.url === '*' ? '' : $attrs.url;
     $scope.title = url || 'dictionary';
-    $http.get('/api/dictionary/' + url)
+    $scope.load = function() {
+      $http.get('/api/dictionary/' + url)
       .then(function(data) {
         $scope.entries = data.data;
       }, function(err) {
         console.log(err);
       });
+    };
 
     $scope.prepend = function(row) {
       if (row) {
@@ -162,6 +164,7 @@ angular.module('hano', [
         url: '/api/dictionary/' + id,
       }).then(function() {
         $scope.entries[id];
+        $scope.load();
         console.log('success');
       }, function(err) {
         console.log(err);
