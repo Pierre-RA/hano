@@ -12,6 +12,7 @@
   "unused": false,
   "strict": true,
   "expr":true,
+  "esversion": 6,
   "globals": {
     "describe": true,
     "it": true,

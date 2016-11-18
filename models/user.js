@@ -3,6 +3,8 @@
 var crypto = require('crypto');
 var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
+var promise = require('bluebird');
+mongoose.promise = promise;
 
 var schemaOptions = {
   timestamps: true,

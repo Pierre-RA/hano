@@ -4,13 +4,33 @@ var express = require('express');
 var router = express.Router();
 var Dictionary = require('../models/dictionary.js');
 var User = require('../models/user.js');
+var ENTRY_PAGINATION = process.env.ENTRY_PAGINATION || 20;
 
 /* GET dictionary listing. */
 router.get('/', function(req, res, next) {
-  Dictionary.find({}, function(err, entries) {
-    if (err) { return res.status(500).json({ error: err }); }
-    res.json(entries);
-  });
+  var page = req.query.page || 1;
+  Dictionary.find({})
+    .sort({timestamp: 1})
+    .skip(10 * (page - 1))
+    .limit(10)
+    .then(function(entries) {
+      return res.json(entries);
+    })
+    .catch(function(err) {
+      return res.status(500).json({ error: err });
+    });
+});
+
+/* GET count */
+router.get('/count', function(req, res, next) {
+  Dictionary.count({})
+    .then(count => {
+      var paginated = count > ENTRY_PAGINATION ? true : false;
+      return res.json({ count: count, paginated: paginated });
+    })
+    .catch(err => {
+      return res.status(500).json({ error: err });
+    });
 });
 
 /* GET entry */

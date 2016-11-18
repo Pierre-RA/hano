@@ -125,15 +125,26 @@ angular.module('hano', [
     $scope.title = url || 'dictionary';
 
     $scope.load = function() {
-      $http.get('/api/dictionary/' + url)
-      .then(function(data) {
-        $scope.entries = data.data;
-      }, function(err) {
-        console.log(err);
-      });
+      console.log('reload: ' + $scope.currentPage);
+      var page = $scope.currentPage;
+      $http.get('/api/dictionary/count')
+        .then(res => {
+          $scope.totalItems = res.data.count;
+          return $http.get('/api/dictionary/' + url + '?page=' + page);
+        })
+        .then(function(data) {
+          $scope.entries = data.data;
+          $scope.currentPage = page;
+          $scope.maxSize = data.data.length;
+        }, function(err) {
+          console.log(err);
+        });
     };
 
-    $scope.load();
+    $scope.currentPage = $scope.currentPage || 1;
+    $scope.$watch('currentPage', function() {
+      $scope.load();
+    });
 
     $scope.prepend = function(row) {
       if (row) {
@@ -169,13 +180,13 @@ angular.module('hano', [
       }
     };
 
-    $scope.delete = function(id) {
+    $scope.delete = function(id, page) {
       $http({
         method: 'delete',
         url: '/api/dictionary/' + id,
       }).then(function() {
         $scope.entries[id];
-        $scope.load();
+        $scope.load(page);
         console.log('success');
       }, function(err) {
         console.log(err);
