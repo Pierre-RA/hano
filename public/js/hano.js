@@ -107,7 +107,6 @@ angular.module('hano', [
   .controller('UserController', function($scope, $attrs, $http) {
     $http.get('/api/users/' + $attrs.url).success(function(data) {
       $scope.user = data;
-      console.log($scope.user);
     });
   })
   .controller('UsersListController', function($scope, $attrs, $http) {
