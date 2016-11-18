@@ -9,6 +9,11 @@ block content
       a(ng-href="/articles/{{article.url}}", ng-show="article.content.length > 200").btn.btn-default.
         #[i.fa.fa-fw.fa-eye(aria-hidden="true")]
         #{i18n.readMore}
+      if user
+        .text-right
+          a(ng-href="/articles/{{article.url}}").btn.btn-default.
+            #[i.fa.fa-fw.fa-eye(aria-hidden="true")]
+            #{i18n.show}
     div
       a(href="/new-article").
         #[i.fa.fa-fw.fa-plus(aria-hidden="true")]
