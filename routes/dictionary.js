@@ -10,7 +10,7 @@ var ENTRY_PAGINATION = process.env.ENTRY_PAGINATION || 20;
 router.get('/', function(req, res, next) {
   var page = req.query.page || 1;
   Dictionary.find({})
-    .sort({timestamp: 1})
+    .sort({createdAt: -1})
     .skip(10 * (page - 1))
     .limit(10)
     .then(function(entries) {

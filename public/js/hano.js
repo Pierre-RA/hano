@@ -125,17 +125,16 @@ angular.module('hano', [
     $scope.title = url || 'dictionary';
 
     $scope.load = function() {
-      console.log('reload: ' + $scope.currentPage);
       var page = $scope.currentPage;
       $http.get('/api/dictionary/count')
         .then(res => {
           $scope.totalItems = res.data.count;
           return $http.get('/api/dictionary/' + url + '?page=' + page);
         })
-        .then(function(data) {
-          $scope.entries = data.data;
+        .then(function(res) {
+          $scope.entries = res.data;
           $scope.currentPage = page;
-          $scope.maxSize = data.data.length;
+          $scope.maxSize = res.data.length;
         }, function(err) {
           console.log(err);
         });
