@@ -40,6 +40,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .flow {
   margin-top: 70px;
+  margin-bottom: 70px;
 }
 
 .vertical-center {
@@ -83,7 +84,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 5px;
 }
 
-.box, .article {
+.box {
   margin: 20px;
 }
 
@@ -146,4 +147,23 @@ h1, h2, h3, h4, h5, h6 {
 
 .debug {
   background-color: rgb(200,0,200);
+}
+
+.navbar-inverse {
+  color: grey;
+}
+
+.footer p {
+  padding: 5px 0;
+}
+
+a,
+.pagination>li>a,
+.pagination>li>span {
+  color: rgb(223,80,39);
+}
+
+.pagination>.active>a {
+  background-color: rgb(223,80,39);
+  border-color: rgb(203,60,19);
 }

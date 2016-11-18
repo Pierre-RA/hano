@@ -205,4 +205,18 @@ angular.module('hano', [
         return parseLinks(text);
       }
     };
+  })
+  .filter('extract', function() {
+    return function(value) {
+      if (!angular.isString(value)) {
+        return value;
+      }
+
+      var dots = '';
+      if (value.length > 200) {
+        dots = '...';
+      }
+
+      return value.slice(0, 200) + dots;
+    };
   });

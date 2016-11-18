@@ -33,12 +33,13 @@ block content
         .related
           span(ng-repeat="relatedWord in entry.related") {{relatedWord}}
       if user
-        button(ng-click="showEdition = !showEdition").btn.btn-link.
-          #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
-          #{i18n.edit}
-        button(ng-click="delete(entry.id, currentPage)").btn.btn-link.
-          #[i.fa.fa-fw.fa-times(aria-hidden="true")]
-          #{i18n.delete}
+        .text-right
+          .btn-group(role="group")
+            button(ng-click="showEdition = !showEdition").btn.btn-default.
+              #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
+              #{i18n.edit}
+            button(ng-click="delete(entry.id, currentPage)").btn.btn-danger.
+              #[i.fa.fa-fw.fa-trash(aria-hidden="true")]
         div.edition(ng-show="showEdition")
           include ../form/entry.jade
     if user

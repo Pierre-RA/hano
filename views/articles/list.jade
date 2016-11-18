@@ -5,12 +5,10 @@ block content
     h1 #{title}
     div(ng-repeat="article in articles").box
       h2 {{article.title}}
-      a(ng-href="/articles/{{article.url}}").
+      div(marked="article.content | parseLinks | extract")
+      a(ng-href="/articles/{{article.url}}", ng-show="article.content.length > 200").btn.btn-default.
         #[i.fa.fa-fw.fa-eye(aria-hidden="true")]
-        #{i18n.show}
-      a(ng-href="/articles/{{article.url}}?edit=true").
-        #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
-        #{i18n.edit}
+        #{i18n.readMore}
     div
       a(href="/new-article").
         #[i.fa.fa-fw.fa-plus(aria-hidden="true")]

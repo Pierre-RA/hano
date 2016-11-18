@@ -40,5 +40,6 @@
   "pageNotFound": "Page not found",
   "categories": "Categories",
   "comment": "comment",
-  "delete": "delete"
+  "delete": "delete",
+  "readMore": "read more"
 }

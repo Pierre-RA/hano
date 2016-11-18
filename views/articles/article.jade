@@ -10,10 +10,12 @@ block content
         span(ng-show="category.text") {{category.text}}
         span(ng-hide="category.text") {{category}}
     if user
-      div.edition
-        button(class="btn btn-info", ng-click="form = !form")
-          span(class="glyphicon glyphicon-pencil")
-        a(href='#', class="btn btn-danger")
-          span(class="glyphicon glyphicon-trash")
+      div.edition.text-right
+        .btn-group.text(role="group")
+            button(ng-click="form = !form").btn.btn-default.
+              #[i.fa.fa-fw.fa-pencil(aria-hidden="true")]
+              #{i18n.edit}
+            a(href='#').btn.btn-danger
+              i.fa.fa-fw.fa-trash(aria-hidden="true")
       div(ng-controller='ArticleFormController', method='PUT', ng-show="form")
         include ../form/article.jade
