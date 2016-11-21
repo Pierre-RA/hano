@@ -2,7 +2,7 @@ HANO
 ====
 
 [![Build Status](https://travis-ci.org/Pierre-RA/hano.svg?branch=master)](https://travis-ci.org/Pierre-RA/hano)
-[![dependencies Status](https://david-dm.org/Pierre-RA/hano/status.svg)](https://david-dm.org/Pierre-RA/hano)
+[![Dependency Status](https://gemnasium.com/badges/github.com/Pierre-RA/hano.svg)](https://gemnasium.com/github.com/Pierre-RA/hano)
 
 Unified Hano project.
 
