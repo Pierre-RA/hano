@@ -3,6 +3,8 @@ extends ../layout
 block content
   div(ng-controller="EntryController", url="#{url}").flow.container.entry
     div.container
+      div(uib-alert, ng-repeat="alert in alerts", ng-class="'alert-' + (alert.type || 'warning')", close="closeAlert($index)")
+        {{alert.msg}}
       h1 {{title}} {{count}}
       .text-center
         ul(uib-pagination, direction-links="false", boundary-links="true", total-items="totalItems", ng-model="currentPage")

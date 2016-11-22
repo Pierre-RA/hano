@@ -139,6 +139,7 @@ angular.module('hano', [
     $scope.entries = {
       entry: {},
     };
+    $scope.alerts = [];
     $scope.success = false;
     $scope.failure = false;
     var url = $attrs.url === '*' ? '' : $attrs.url;
@@ -156,6 +157,10 @@ angular.module('hano', [
           $scope.currentPage = page;
           $scope.maxSize = res.data.length;
         }, function(err) {
+          $scope.alerts.push({
+            type: 'danger', msg: 'Couldn\'t delete this article. ' +
+              'An error has occured',
+          });
           console.log(err);
         });
     };
@@ -165,13 +170,14 @@ angular.module('hano', [
       $scope.load();
     });
 
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
+    };
+
     $scope.prepend = function(row) {
-      if (row) {
-        $scope.entries[row].definitions.push({});
-      } else {
-        $scope.entry.definitions = [];
-        $scope.entry.definitions.push({});
-      }
+      row = 0 || row;
+      $scope.entries[row].definitions = $scope.entries[row].definitions || [];
+      $scope.entries[row].definitions.push({});
     };
 
     $scope.update = function(index, id) {
@@ -182,8 +188,14 @@ angular.module('hano', [
           url: '/api/dictionary/' + id,
           data: entry,
         }).then(function() {
-          console.log('success');
+          $scope.alerts.push({
+            type: 'success', msg: 'Entry has been updated.',
+          });
         }, function(err) {
+          $scope.alerts.push({
+            type: 'danger', msg: 'Couldn\'t delete this article. ' +
+              'An error has occured',
+          });
           console.log(err);
         });
       } else {
@@ -192,22 +204,34 @@ angular.module('hano', [
           url: '/api/dictionary',
           data: $scope.entry,
         }).then(function() {
-          console.log('success');
+          $scope.alerts.push({
+            type: 'success', msg: 'Entry has been added.',
+          });
         }, function(err) {
+          $scope.alerts.push({
+            type: 'danger', msg: 'Couldn\'t delete this article. ' +
+              'An error has occured',
+          });
           console.log(err);
         });
       }
     };
 
     $scope.delete = function(id, page) {
+      if (!confirm('Do you really want to remove this article?')) {
+        return;
+      }
       $http({
         method: 'delete',
         url: '/api/dictionary/' + id,
       }).then(function() {
         $scope.entries[id];
         $scope.load(page);
-        console.log('success');
       }, function(err) {
+        $scope.alerts.push({
+          type: 'danger', msg: 'Couldn\'t delete this article. ' +
+            'An error has occured',
+        });
         console.log(err);
       });
     };
