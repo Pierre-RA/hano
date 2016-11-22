@@ -79,6 +79,7 @@ angular.module('hano', [
     });
   })
   .controller('ArticleFormController', function($scope, $attrs, $http) {
+    $scope.alerts = [];
     $scope.update = function() {
       var append = $scope.article.url ? '/' + $scope.article.id : '';
       $http({
@@ -86,10 +87,15 @@ angular.module('hano', [
         url: '/api/articles' + append,
         data: $scope.article,
       }).then(function() {
-        console.log('success');
+        $scope.alerts.push({
+          type: 'success', msg: 'Article has been created.',
+        });
       }, function(err) {
         console.log(err);
       });
+    };
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
     };
     $scope.reset = function() {
       $scope.article = {};
@@ -158,7 +164,7 @@ angular.module('hano', [
           $scope.maxSize = res.data.length;
         }, function(err) {
           $scope.alerts.push({
-            type: 'danger', msg: 'Couldn\'t delete this article. ' +
+            type: 'danger', msg: 'Couldn\'t load these entries. ' +
               'An error has occured',
           });
           console.log(err);
@@ -193,7 +199,7 @@ angular.module('hano', [
           });
         }, function(err) {
           $scope.alerts.push({
-            type: 'danger', msg: 'Couldn\'t delete this article. ' +
+            type: 'danger', msg: 'Couldn\'t update this entry. ' +
               'An error has occured',
           });
           console.log(err);
@@ -209,7 +215,7 @@ angular.module('hano', [
           });
         }, function(err) {
           $scope.alerts.push({
-            type: 'danger', msg: 'Couldn\'t delete this article. ' +
+            type: 'danger', msg: 'Couldn\'t create this entry. ' +
               'An error has occured',
           });
           console.log(err);
@@ -218,7 +224,7 @@ angular.module('hano', [
     };
 
     $scope.delete = function(id, page) {
-      if (!confirm('Do you really want to remove this article?')) {
+      if (!confirm('Do you really want to remove this entry?')) {
         return;
       }
       $http({
@@ -229,7 +235,7 @@ angular.module('hano', [
         $scope.load(page);
       }, function(err) {
         $scope.alerts.push({
-          type: 'danger', msg: 'Couldn\'t delete this article. ' +
+          type: 'danger', msg: 'Couldn\'t delete this entry. ' +
             'An error has occured',
         });
         console.log(err);
