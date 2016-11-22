@@ -98,11 +98,32 @@ angular.module('hano', [
       return $http.get('/api/categories?query=' + query);
     };
   })
-  .controller('ArticleController', function($scope, $attrs, $http) {
+  .controller('ArticleController', function($scope, $attrs, $http, $location) {
+    $scope.alerts = [];
     $http.get('/api/articles/' + $attrs.url).success(function(data) {
       $scope.article = data;
     });
     $scope.form = false;
+    $scope.delete = function(id, page) {
+      if (!confirm('Do you really want to remove this article?')) {
+        return;
+      }
+      $http({
+        method: 'delete',
+        url: '/api/articles/' + id,
+      }).then(function() {
+        $location.path('/articles');
+      }, function(err) {
+        $scope.alerts.push({
+          type: 'danger', msg: 'Couldn\'t delete this article. ' +
+            'An error has occured',
+        });
+        console.log(err);
+      });
+    };
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
+    };
   })
   .controller('UserController', function($scope, $attrs, $http) {
     $http.get('/api/users/' + $attrs.url).success(function(data) {
