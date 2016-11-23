@@ -1,0 +1,6 @@
+extends ../layout
+
+block content
+  div(ng-controller='EntryController', method=method).flow.container
+    h1= i18n.createEntry
+    include ../form/entry

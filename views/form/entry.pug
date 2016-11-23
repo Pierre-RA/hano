@@ -1,27 +1,27 @@
 form(novalidate)
   .form-group
-    label #{i18n.trans}
+    label= i18n.trans
     input(type="text", ng-model="entry.transcription", class="form-control")
-    label #{i18n.ipa}
+    label= i18n.ipa
     input(type="text", ng-model="entry.ipa", class="form-control")
   .form-group
-    label #{i18n.lang}
+    label= i18n.lang
     select(ng-model="entry.lang", class="form-control")
-      option(value="modern") #{i18n.modern}
-      option(value="wutopian") #{i18n.wutopian}
-      option(value="high-wutopian") #{i18n.highWutopian}
-      option(value="nardanskh") #{i18n.nardanskh}
-      option(value="cholian") #{i18n.cholian}
-      option(value="janubian") #{i18n.janubian}
+      option(value="modern")= i18n.modern
+      option(value="wutopian")= i18n.wutopian
+      option(value="high-wutopian")= i18n.highWutopian
+      option(value="nardanskh")= i18n.nardanskh
+      option(value="cholian")= i18n.cholian
+      option(value="janubian")= i18n.janubian
   .form-group
-    label #{i18n.type}
+    label= i18n.type
     input(type="text", ng-model="entry.type", class="form-control")
   .form-group(ng-repeat="definition in entry.definitions").col-md-11.col-md-offset-1
-    label #{i18n.definition}
+    label= i18n.definition
     input(type="text", ng-model="definition.def", class="form-control")
-    label #{i18n.note}
+    label= i18n.note
     input(type="text", ng-model="definition.note", class="form-control")
-    label #{i18n.comment}
+    label= i18n.comment
     input(type="text", ng-model="definition.comment", class="form-control")
     hr
   div
@@ -32,4 +32,3 @@ form(novalidate)
     span(class="glyphicon glyphicon-ok")
   button(type="button", class="btn btn-danger", ng-click="reset()")
     span(class="glyphicon glyphicon-remove")
-  

@@ -1,13 +1,13 @@
 form(novalidate, action="/sign-in", method="post")
-  .message #{message}
+  .message= message
   .form-group
-    label #{i18n.email}
+    label= i18n.email
     input(type="email", name="email", class="form-control")
   .form-group
-    label #{i18n.password}
+    label= i18n.password
     input(type="password", name="password", class="form-control")
   .form-group
     button(type="submit", class="btn btn-success", ng-click="update()")
       span(class="glyphicon glyphicon-ok")
 p
-  a(href="/") #{i18n.home}
+  a(href="/")= i18n.home

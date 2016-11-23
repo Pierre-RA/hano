@@ -1,9 +1,9 @@
 extends ../layout
 
 block content
-  div(ng-controller='ArticleController', url='#{url}').flow.container.article
+  div(ng-controller='ArticleController', url=url).flow.container.article
     div(uib-alert, ng-repeat="alert in alerts", ng-class="'alert-' + (alert.type || 'warning')", close="cloaseAlert($index)")
-      {{alert.msg}}
+      | {{alert.msg}}
     h1 {{article.title}}
     div(marked="article.content | parseLinks")
     div.categories
@@ -20,4 +20,4 @@ block content
             button(ng-click='delete(article.id)').btn.btn-danger
               i.fa.fa-fw.fa-trash(aria-hidden="true")
       div(ng-controller='ArticleFormController', method='PUT', ng-show="form")
-        include ../form/article.jade
+        include ../form/article.pug

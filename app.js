@@ -72,7 +72,7 @@ app.set('views', [
   path.join(__dirname, 'views/dictionary'),
   path.join(__dirname, 'views/users'),
 ]);
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));

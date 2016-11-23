@@ -1,10 +1,10 @@
 extends ../layout
 
 block content
-  div(ng-controller="EntryController", url="#{url}").flow.container.entry
+  div(ng-controller="EntryController", url=url).flow.container.entry
     div.container
       div(uib-alert, ng-repeat="alert in alerts", ng-class="'alert-' + (alert.type || 'warning')", close="closeAlert($index)")
-        {{alert.msg}}
+        | {{alert.msg}}
       h1 {{title}} {{count}}
       .text-center
         ul(uib-pagination, direction-links="false", boundary-links="true", total-items="totalItems", ng-model="currentPage")
@@ -43,7 +43,7 @@ block content
             button(ng-click="delete(entry.id, currentPage)").btn.btn-danger.
               #[i.fa.fa-fw.fa-trash(aria-hidden="true")]
         div.edition(ng-show="showEdition")
-          include ../form/entry.jade
+          include ../form/entry.pug
     if user
       div
         a(href="/new-entry").

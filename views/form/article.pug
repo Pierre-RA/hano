@@ -1,11 +1,11 @@
 div(uib-alert, ng-repeat="alert in alerts", ng-class="'alert-' + (alert.type || 'warning')", close="closeAlert($index)")
-  {{alert.msg}}
+  | {{alert.msg}}
 form(novalidate).box
   .form-group
-    label #{i18n.title}
+    label= i18n.title
     input(type="text", ng-model="article.title", class="form-control")
   .form-group
-    label #{i18n.content}
+    label= i18n.content
     textarea(ng-model="article.content", class="form-control", rows="20")
     tags-input(ng-model="article.categories")
       auto-complete(source="loadTags($query)")
