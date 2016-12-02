@@ -1,48 +1,20 @@
 {
   "name": "hano",
+  "description": "Hano unified project",
   "version": "5.0.6",
   "private": true,
   "author": "Pierre Repetto-Andipatin <pierre@anthillsolutions.ch",
   "scripts": {
-    "cs": "jscs app.js routes/*.js test/server/*.js",
-    "lint": "jshint app.js routes/*.js test/server/*.js",
-    "init": "node ./bin/prepare.js",
-    "start": "node ./bin/www",
-    "test": "export NODE_ENV=test && npm run lint && npm run cs && istanbul cover _mocha test/server/ -- -R spec"
+    "build": "",
+    "start": "",
+    "test": ""
   },
   "dependencies": {
-    "angular": "^1.5.7",
-    "angular-marked": "^1.2.1",
-    "angular-ui-bootstrap": "^2.2.0",
+    "@types/bcrypt-nodejs": "0.0.30",
+    "@types/express": "^4.0.34",
+    "@types/mongoose": "^4.6.2",
+    "@types/node": "^6.0.50",
     "bcrypt-nodejs": "0.0.3",
-    "bluebird": "^3.4.6",
-    "body-parser": "~1.15.2",
-    "connect-flash": "^0.1.1",
-    "cookie-parser": "~1.4.3",
-    "crypto": "0.0.3",
-    "debug": "~2.3.2",
-    "dotenv": "^2.0.0",
-    "express": "~4.14.0",
-    "express-session": "^1.13.0",
-    "font-awesome": "^4.6.3",
-    "marked": "^0.3.6",
-    "mongoose": "^4.4.20",
-    "morgan": "~1.7.0",
-    "ng-tags-input": "^3.1.1",
-    "node-slug": "0.0.2",
-    "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
-    "prompt": "^1.0.0",
-    "pug": "^2.0.0-beta6",
-    "serve-favicon": "~2.3.0",
-    "slug": "^0.9.1"
-  },
-  "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
-    "istanbul": "^0.4.3",
-    "jscs": "^3.0.3",
-    "jshint": "^2.9.2",
-    "mocha": "^3.1.2"
+    "express": "^4.14.0"
   }
 }

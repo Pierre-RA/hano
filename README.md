@@ -4,6 +4,7 @@ HANO
 [![Build Status](https://travis-ci.org/Pierre-RA/hano.svg?branch=master)](https://travis-ci.org/Pierre-RA/hano)
 [![Dependency Status](https://gemnasium.com/badges/github.com/Pierre-RA/hano.svg)](https://gemnasium.com/github.com/Pierre-RA/hano)
 [![Hano version](https://img.shields.io/github/release/Pierre-RA/hano.svg)](https://hano.herokuapp.com)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 Unified Hano project.
 
