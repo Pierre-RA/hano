@@ -10,6 +10,9 @@
     "start": "node ./bin/www",
     "test": "export NODE_ENV=test && npm run lint && npm run cs && istanbul cover _mocha test/server/ -- -R spec"
   },
+  "engines": {
+    "node": "6.11.1"
+  },
   "dependencies": {
     "angular": "^1.6.5",
     "angular-marked": "^1.2.2",
